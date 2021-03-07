@@ -1,0 +1,34 @@
+<form class="login flex flex--column">
+
+  <div class="login__logo flex flex--row flex__align-items--center flex__justify-content--center">
+    <img src="assets/image/logo.png" alt="Logo" />
+  </div>
+
+  <span textColor="black-three" textSize="14" class="font__weight--bold login--title">LOGIN</span>
+  <span textColor="brown-grey" textSize="13" class="login--subtitle">Login to access your account</span>
+
+  <mat-form-field>
+    <input [formControl]="data.email" type="email" matInput placeholder="Email">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input [formControl]="data.password" type="password" matInput placeholder="Password">
+  </mat-form-field>
+
+  <div class="flex flex--row flex__align-items--center flex__justify-content--space-between login__form--checkbox">
+    <mat-checkbox color="primary" [checked]="data.remember" (change)="rememberMe($event)">
+      <span textSize="12" textColor="brownish-grey">Remember me</span>
+    </mat-checkbox>
+
+    <a [routerLink]="['/forgot-password']" textSize="13" textColor="dodger-blue" class="text__decoration--none">Forgot
+      Password</a>
+  </div>
+
+
+  <button [disabled]="validateFields()" (click)="login()" class="login__form--button" mat-raised-button
+    color="primary">LOG IN</button>
+
+  <p textSize="13" class="text--center">Don’t have an Account? <span textSize="14" textColor="dodger-blue"
+      class="block--click" (click)="goRegister()">Register Here</span></p>
+
+</form>

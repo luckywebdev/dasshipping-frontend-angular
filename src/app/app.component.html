@@ -1,0 +1,21 @@
+<app-loading-screen></app-loading-screen>
+
+<div *ngIf="userService.user; else default">
+  <mat-toolbar>
+    <app-header [user]="userService.user" (toggleMenu)="toggleMenu()"></app-header>
+  </mat-toolbar>
+  <mat-sidenav-container class="container">
+    <mat-sidenav #drawer mode="side" opened="false" role="navigation">
+      <app-sidebar></app-sidebar>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="container__content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+
+<ng-template #default>
+  <router-outlet></router-outlet>
+</ng-template>

@@ -1,0 +1,41 @@
+@import "src/styles/colors";
+
+button {
+  max-height: 40px;
+}
+
+.button_right {
+  margin-left: 10px;
+}
+
+.column {
+  &--first {
+    margin-right: 15px;
+  }
+}
+
+mat-checkbox {
+  min-width: 100px;
+}
+
+.cars {
+  &--input {
+    margin: 0 5px;
+  }
+
+  &--select {
+    margin-top: 3px;
+  }
+
+  &--actions {
+    min-width: 80px;
+
+    &-red {
+      color: $red;
+    }
+
+    &-blue {
+      color: $dodger-blue;
+    }
+  }
+}

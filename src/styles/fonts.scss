@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,600i,700|Raleway');
+
+$sizes: 5 10 11 12 13 14 16 18 20 22 35;
+$weights: 100 200 300 400 500 600 800 900 bold normal;
+
+.font {
+  &__size {
+    @each $size in $sizes {
+      &--#{$size} {
+        font-size: $size + unquote('px');
+      }
+    }
+  }
+
+  &__weight {
+    @each $weight in $weights {
+      &--#{$weight} {
+        font-weight: $weight !important;
+      }
+    }
+  }
+
+  &__family {
+    &--raleway {
+      font-family: 'Raleway', sans-serif;
+    }
+
+    &--opensans {
+      font-family: 'Open Sans', sans-serif;
+    }
+  }
+}

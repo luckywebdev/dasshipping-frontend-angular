@@ -1,0 +1,61 @@
+@import "src/styles/colors.scss";
+
+/deep/ .mat-tab-label {
+  flex: 1;
+  opacity: 1 !important;
+}
+
+.filter {
+  &--input {
+    margin: 0 15px;
+
+    mat-form-field {
+      margin-top: 10px;
+    }
+    input {
+      color: rgba(0, 0, 0, 0.87);
+      font-size: 14px;
+    }
+    ::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.54);
+      font-size: 12px;
+    }
+  }
+}
+
+.separator {
+  height: 20px;
+  background-color: $galeria;
+}
+
+.order {
+  margin: 0 20px 20px 20px;
+  display: flex;
+  justify-content: flex-end;
+  &__new {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    background: $dodger-blue;
+    border-radius: 20px !important;
+    z-index: 2;
+    box-shadow: 1px 1.7px 8px 0 $black-40;
+  }
+  &__import {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    background: $dodger-blue;
+    color: $white;
+    padding: 0 15px;
+    border-radius: 6px;
+    z-index: 2;
+    box-shadow: 1px 1.7px 8px 0 $black-40;
+  }
+}

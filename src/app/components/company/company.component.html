@@ -1,0 +1,228 @@
+<div class="flex flex--row">
+  <div class="column_first flex">
+    <div class="flex flex--column flex--box">
+      <div class="flex">
+        <mat-card class="personal">
+          <mat-card-content>
+            <div class="flex flex--row flex--center" *ngIf="company">
+              <div *ngIf="editable">
+                <img *ngIf="cover_photo" [src]="cover_photo" alt="">
+                <button *ngIf="cover_photo" mat-icon-button (click)="removeCover()" class="delete">
+                  <mat-icon class="text__color--red">delete</mat-icon>
+                </button>
+                <div *ngIf="!cover_photo" class="flex flex--column flex--center flex--box upload">
+                  <input accept="image/*" (change)="uploadPhoto($event.target.files[0])" id="cover_photo" type="file"
+                    placeholder="Add Profile Photo" hidden>
+                  <label class="block--click flex flex--column flex--center" for="cover_photo">
+                    <mat-icon class="text__color--brown-grey font__size--35">add_a_photo</mat-icon>
+                    <p>UPLOAD A PHOTO</p>
+                    <span class="text__color--brown-grey">Click here to upload a company photo</span>
+                  </label>
+                </div>
+              </div>
+              <div *ngIf="!editable" class="flex flex--column flex--center flex--box">
+                <img *ngIf="cover_photo" [src]="cover_photo" alt="">
+                <label *ngIf="!cover_photo">No company photo</label>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="column-margin flex flex--box">
+        <mat-card class="personal">
+          <mat-card-content>
+            <div class="flex flex--row flex__justify-content--space-between flex__align-items--center">
+              <div class="column-margin-title">
+                {{company && user.roleId === roles.COMPANY_ADMIN ? 'Permits' : 'Carrier Fleet Docs'}}
+              </div>
+              <div class="flex flex--row column-margin-file">
+                <div *ngIf="company && user.roleId === roles.COMPANY_ADMIN">
+                  <input #document (change)="uploadAttachments($event.target.files[0])" id="attachments" type="file"
+                    placeholder="Add Permits" hidden>
+                  <label class="flex flex--column flex--center" for="attachments">
+                    <p>Add</p>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex--column" *ngIf="company && company.files">
+              <div class="attachments flex flex--row flex__justify-content--space-between flex__align-items--center"
+                *ngFor="let file of company.files">
+                <div class="flex flex--row flex__align-items--center">
+                  <i class="material-icons" textColor="brown-grey">
+                    attach_file
+                  </i>
+                  <span class="attachments--name">{{file.displayName}}</span>
+                </div>
+                <div class="flex flex--row flex__align-items--center">
+                  <button mat-icon-button (click)="downloadAttachment(file)">
+                    <mat-icon>file_copy</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="removeAttachment(file.id)"
+                    *ngIf="company && user.roleId === roles.COMPANY_ADMIN">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+    </div>
+  </div>
+  <div class="flex flex--box" *ngIf="!editable && company">
+    <mat-card class="personal">
+      <mat-card-content>
+        <div class="flex flex--row">
+          <div class="flex flex--column flex--box">
+            <span textSize="14" textWeight="bold" textColor="black-two">Contact Details</span>
+            <div class="column-item flex flex--column">
+              <label>{{company.name}}</label>
+              <label class="text__color--brown-grey font__size--12">Name</label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>Company Address</label>
+              <label class="text__color--brown-grey font__size--12">{{company.address}}/ {{company.city}}/
+                {{company.state}}/ {{company.zip}}</label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>Company Contact Name</label>
+              <label class="text__color--brown-grey font__size--12">{{company.contactPersonFirstName}}
+                {{company.contactPersonLastName}}</label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>Phone</label>
+              <label class="font__size--12">
+                <a class="text__color--brown-grey" href="tel:{{company.officePhone}}">
+                  {{company.officePhone}}
+                </a>
+              </label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>Email</label>
+              <label class="font__size--12">
+                <a class="text__color--brown-grey" href="mailto:{{company.email}}" target="_blank">
+                  {{company.email}}
+                </a>
+              </label>
+            </div>
+          </div>
+          <div class="flex flex--column flex--box">
+            <span textSize="14" textWeight="bold" textColor="black-two">Company Details</span>
+            <div class="column-item flex flex--column">
+              <label>{{company.dotNumber}}</label>
+              <label class="text__color--brown-grey font__size--12">DOT Number</label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>{{company.msNumber}}</label>
+              <label class="text__color--brown-grey font__size--12">MS Number</label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>
+                <a class="flex--box register__form--file font__size--12 text__color--brown-grey"
+                  *ngIf="company.insuranceUrl" [href]="company.insuranceUrl" target="_blank">Insurance Url</a></label>
+              Insurance
+            </div>
+            <div class="column-item flex flex--column">
+              <label>
+                <a class="flex--box register__form--file font__size--12 text__color--brown-grey"
+                  *ngIf="company.mcCertificateUrl" [href]="company.mcCertificateUrl" target="_blank">Mc Certificate
+                  Url</a>
+              </label>
+              MC Certificate
+            </div>
+            <div class="column-item flex flex--column">
+              <label>
+                {{company.blocked ? "Block": "Active"}}
+              </label>
+              <label class="text__color--brown-grey font__size--12">Status</label>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions class="text--right" *ngIf="user.roleId === roles.COMPANY_ADMIN">
+        <button (click)="edit()" class="login__form--button" mat-icon-button color="primary">
+          <i class="material-icons">
+            lock
+          </i>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div *ngIf="editable" class="column_second flex flex--box">
+    <form [formGroup]="data" class="flex flex--row">
+      <mat-card class="personal">
+        <mat-card-content>
+          <div class="flex flex--row">
+            <div class="column column-form flex column-width flex--column">
+              <div class="flex flex--column flex--box">
+                <mat-form-field>
+                  <input type="text" formControlName="address" matInput placeholder="Address"
+                    (ngModelChange)="addressValidator($event)">
+                </mat-form-field>
+                <mat-form-field>
+                  <input type="text" formControlName="city" matInput placeholder="City"
+                    (ngModelChange)="addressValidator($event)">
+                </mat-form-field>
+                <mat-form-field>
+                  <input [matAutocomplete]="auto" autocomplete="offdisable" type="text" formControlName="state" matInput
+                    placeholder="State" (ngModelChange)="addressValidator($event)">
+                </mat-form-field>
+                <mat-form-field>
+                  <input type="text" formControlName="zip" matInput placeholder="Zip"
+                    (ngModelChange)="addressValidator($event)">
+                </mat-form-field>
+                <mat-form-field>
+                  <input type="text" formControlName="officePhone" matInput placeholder="Phone">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="column column-form flex column-width flex--column">
+              <div class="flex flex--column">
+                <mat-form-field>
+                  <input type="tel" formControlName="contactPersonPhone" matInput placeholder="Contact Person Phone">
+                </mat-form-field>
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option">{{option}}</mat-option>
+                </mat-autocomplete>
+              </div>
+
+              <div class="register__form--file-picker flex flex--row flex__align-items--center document">
+                <mat-icon>note_add</mat-icon>
+                <span *ngIf="!company.mcCertificateUrl" textSize="13" textColor="brownish-grey"
+                  class="flex--box register__form--file">Add Insurance</span>
+                <a class="flex--box register__form--file" *ngIf="company.mcCertificateUrl"
+                  [href]="company.mcCertificateUrl" target="_blank">Insurance Url</a>
+                <input accept="image/jpeg,application/pdf"
+                  (change)="uploadDocument($event.target.files[0],'mcCertificateUrl')" id="mcCertificate" type="file"
+                  placeholder="Add Mc Certificate" hidden>
+                <label textSize="16" textColor="dodger-blue" class="block--click" for="mcCertificate">BROWSE</label>
+              </div>
+
+              <div class="register__form--file-picker flex flex--row flex__align-items--center document">
+                <mat-icon>security</mat-icon>
+                <span *ngIf="!company.insuranceUrl" textSize="13" textColor="brownish-grey"
+                  class="flex--box register__form--file">Add Insurance</span>
+                <a class="flex--box register__form--file" *ngIf="company.insuranceUrl" [href]="company.insuranceUrl"
+                  target="_blank">Insurance Url</a>
+                <input accept="image/jpeg,application/pdf"
+                  (change)="uploadDocument($event.target.files[0],'insuranceUrl')" id="insurance" type="file"
+                  placeholder="Add Mc Certificate" hidden>
+                <label textSize="16" textColor="dodger-blue" class="block--click" for="insurance">BROWSE</label>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions class="text--right" *ngIf="user.roleId === roles.COMPANY_ADMIN">
+          <button (click)="save()" class="login__form--button" mat-icon-button color="primary">
+            <i class="material-icons">
+              lock_open
+            </i>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,179 @@
+<div class="mat-elevation-z8">
+  <div class="loading--spinner" *ngIf="loading">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+  <table mat-table [dataSource]="dataSource" (matSortChange)="sortData($event)" matSort>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>
+        <span></span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }">
+        <div class="flex flex--column flex__align-items--center profit">
+          <span class="profit--item"> Profit:{{element.profit}}$</span>
+          <span class="profit--item-second"
+            [ngClass]="{ 'order--canceled-text': element.originalStatus === orderStatuses.CANCELED }">{{element.uuid}}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="pickLocation">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Origin</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }">
+        {{element.pickLocation}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="distance">
+      <th mat-header-cell *matHeaderCellDef>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }">
+        <div class="flex flex--column flex__align-items--center">
+          <span> {{element.distance}}mi</span>
+          <span class="arrow--right"></span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="deliveryLocation">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Destination </span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }">
+        {{element.deliveryLocation}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cargo">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Cargo</span>
+      </th>
+      <td mat-cell *matCellDef="let element" [innerHtml]="element.cargo" (click)="goOrder(element)"
+        [ngClass]="{ highlight: element.existNotify }"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="shipper">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Shipper</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }">
+        {{element.shipper}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="trailerType">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Trailer</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }">
+        {{element.trailerType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="pickDate">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Time Frames</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }">
+        <div class="flex flex--column">
+          <div class="flex flex--column"><span>Pickup:</span> <span
+              [ngClass]="{ late_date: element.latePickUp }">{{element.pickDate}}</span></div>
+          <div class="flex flex--column"><span>Delivery:</span> <span
+              [ngClass]="{ late_date: element.lateDelivery }">{{element.deliveryDate}}</span></div>
+        </div>
+    </ng-container>
+
+    <ng-container matColumnDef="age">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>{{status === orderTabs.DISPATCHED ? 'Dispatched' : 'Age'}}</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }">
+        {{element.age}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>
+        <span></span>
+      </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{ highlight: element.existNotify }">
+        <div class="flex flex--column" *ngIf="status === orderTabs.PUBLISHED && element.originalStatus !== orderStatuses.CANCELED">
+          <div class="offer offer--price cursor">
+            <div class="flex flex--column">
+              <span>{{element.perMile}}$/mile</span>
+              <span>{{element.price}}$</span>
+            </div>
+          </div>
+          <div class="offer offer--offer cursor"
+            *ngIf="element.published && element.originalStatus !== orderStatuses.CANCELED"
+            (click)="updatePublish(element,'unpublish')">
+            {{element.salePrice}}$ <br>
+            Unpublish</div>
+          <div class="offer offer--offer cursor"
+            *ngIf="!element.published && element.originalStatus !== orderStatuses.CANCELED"
+            (click)="updatePublish(element,'publish')">
+            {{element.salePrice}}$ <br>
+            Publish</div>
+        </div>
+        <div class="flex flex--column" *ngIf="status === orderTabs.REQUESTED">
+          <div class="offer offer--price cursor">
+            <div class="flex flex--column">
+              <span>Best match</span>
+              <span>{{element.salePrice}}$</span>
+            </div>
+          </div>
+          <div *ngIf="element.dispatchesLength && element.originalStatus !== orderStatuses.CANCELED"
+            class="offer offer--offer cursor flex flex--row flex__align-items--center" (click)="view(element)">
+            <div class="number--vechicle">{{element.dispatchesLength}}</div>
+            View all
+          </div>
+          <div *ngIf="element.paymentStatus" [ngClass]="{ payment_status: !element.paymentStatusSucces }"
+            class="offer offer--payment cursor flex flex--row flex__align-items--center">
+            {{element.paymentStatus}}
+          </div>
+        </div>
+        <div class="flex flex--column order--canceled flex__align-items--center"
+          *ngIf="element.originalStatus === orderStatuses.CANCELED && [orderTabs.REQUESTED].includes(this.status)">
+          <div class="order--canceled-text">Canceled by Client</div>
+          <button class="login__form--button order--canceled-button" mat-icon-button color="primary"
+            (click)="checkDelete(element)">
+            <mat-icon class="text__color--red">delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="company">
+      <th mat-header-cell *matHeaderCellDef>
+        <span
+          *ngIf="[orderTabs.DISPATCHED, orderTabs.PICKED_UP, orderTabs.DELIVERED, orderTabs.ASSIGNED, orderTabs.EXPIRED].includes(this.status)">Carrier</span>
+      </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{ highlight: element.existNotify }">
+        <div class="flex flex--column"
+          *ngIf="element.companyId && [orderTabs.DISPATCHED, orderTabs.PICKED_UP, orderTabs.DELIVERED, orderTabs.ASSIGNED, orderTabs.EXPIRED].includes(status)">
+          <div class="flex flex--row" (click)="goCompany(element.companyId)">
+            <img *ngIf="element.companyAvatar" [src]="element.companyAvatar" alt="{{ element.companyContact }}"
+              class="actors--avatar" />
+            <span *ngIf="!element.companyAvatar" class="actors--avatar actors--no-avatar"></span>
+            <div class="flex flex--column flex__justify-content--center">
+              <span>{{ element.companyContact }}</span>
+            </div>
+          </div>
+          <div *ngIf="element.paymentStatus" [ngClass]="{ payment_status: !element.paymentStatusSucces }"
+            class="offer offer--payment cursor flex flex--row flex__align-items--center">
+            {{element.paymentStatus}}
+          </div>
+        </div>
+        <div class="flex flex--column order--canceled flex__align-items--center"
+          *ngIf="element.originalStatus === orderStatuses.CANCELED">
+          <div class="order--canceled-text">Canceled by Client</div>
+          <button class="login__form--button order--canceled-button" mat-icon-button color="primary"
+            (click)="checkDelete(element)">
+            <mat-icon class="text__color--red">delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [length]="countOrders" [pageSize]="limit" [pageSizeOptions]="pageLimit" (page)="changePage($event)">
+  </mat-paginator>
+</div>

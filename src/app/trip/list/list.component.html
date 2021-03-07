@@ -1,0 +1,247 @@
+<form [formGroup]="filter" class="mat-elevation-z8 filter">
+  <mat-card>
+    <mat-card-content>
+      <div class="flex flex--row flex--wrap">
+        <div class="flex flex--column flex--box filter--block  filter--input">
+          <mat-form-field>
+            <input type="text" formControlName="id" matInput placeholder="Id" />
+          </mat-form-field>
+        </div>
+
+        <div
+          class="flex flex--column flex--box filter--block"
+          *ngIf="
+            userService.user && userService.user.roleId !== roles.DISPATCHER
+          "
+        >
+          <ng-select
+            placeholder="Select dispatcher"
+            [virtualScroll]="true"
+            formControlName="dispatcherId"
+            (scrollToEnd)="getListDispatchers()"
+            class="custom-accounts"
+          >
+            <ng-option
+              *ngFor="let dispatcher of dispatchers"
+              [value]="dispatcher.id"
+              >{{ dispatcher.firstName }} {{ dispatcher.lastName }}</ng-option
+            >
+          </ng-select>
+        </div>
+
+        <div class="flex flex--column flex--box filter--block">
+          <ng-select
+            placeholder="Select driver"
+            [virtualScroll]="true"
+            formControlName="driverId"
+            (scrollToEnd)="getListDrivers()"
+            class="custom-accounts"
+          >
+            <ng-option *ngFor="let driver of drivers" [value]="driver.id"
+              >{{ driver.firstName }} {{ driver.lastName }}
+            </ng-option>
+          </ng-select>
+        </div>
+
+        <div class="flex flex--column flex--box filter--block filter--select">
+          <mat-form-field>
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option
+                *ngFor="let status of tripStatuses"
+                [value]="status.value"
+              >
+                {{ status.label ? status.label : '--' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions class="text--right">
+      <button
+        (click)="search()"
+        class="login__form--button"
+        mat-raised-button
+        color="primary"
+      >
+        Search
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>
+<div class="mat-elevation-z8">
+  <div class="loading--spinner" *ngIf="loading">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    (matSortChange)="sortData($event)"
+    matSort
+  >
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox
+          color="primary"
+          (change)="$event ? masterToggle() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+          [aria-label]="checkboxLabel()"
+        >
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox
+          color="primary"
+          (click)="$event.stopPropagation()"
+          (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)"
+          [aria-label]="checkboxLabel(row)"
+        >
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="id">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        [disabled]="!!(selection && selection.selected.length)"
+      >
+        <span *ngIf="selection && !selection.selected.length">Id</span>
+        <div *ngIf="selection && selection.selected.length">
+          <button mat-icon-button (click)="checkRemoveTrips()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goTrip(element)">
+        ID: {{ element.id }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="pickInformation">
+      <th mat-header-cell *matHeaderCellDef>
+        <span *ngIf="selection && !selection.selected.length">Pickup</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goTrip(element)">
+        <span class="information--header">Pickup</span>
+        <br />
+        <div
+          [innerHtml]="element.pickInformation"
+          class="information--item"
+        ></div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="distance">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element" (click)="goTrip(element)">
+        <div
+          class="flex flex--column flex__align-items--center information--distance"
+        >
+          <span> {{ element.distance }}mi</span>
+          <span class="arrow--right"></span>
+          <span> ${{ element.price }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="deliveryInformation">
+      <th mat-header-cell *matHeaderCellDef>
+        <span *ngIf="selection && !selection.selected.length">Delivery</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goTrip(element)">
+        <span class="information--header">Delivery</span>
+        <br />
+        <div
+          [innerHtml]="element.deliveryInformation"
+          class="information--item"
+        ></div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actors">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div class="flex flex--row flex__justify-content--space-between actors">
+          <div class="flex flex--row">
+            <img
+              *ngIf="element.driverAvatar"
+              [src]="element.driverAvatar"
+              alt="{{ element.driver }}"
+              class="actors--avatar"
+            />
+            <span
+              *ngIf="!element.driverAvatar"
+              class="actors--avatar actors--no-avatar"
+            ></span>
+            <div class="flex flex--column">
+              <span>{{ element.driver }}</span>
+              <span class="actors--role">Driver</span>
+            </div>
+          </div>
+          <button
+            mat-icon-button
+            (click)="assaignDriver(element)"
+            *ngIf="element.statusOriginal !== tripStatus.COMPLETED"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+        <div
+          class="flex flex--row flex__justify-content--space-between actors"
+          *ngIf="!isDispetcher()"
+        >
+          <div class="flex flex--row">
+            <img
+              *ngIf="element.dispatcherAvatar"
+              [src]="element.dispatcherAvatar"
+              alt="{{ element.dispatcher }}"
+              class="actors--avatar"
+            />
+            <span
+              *ngIf="!element.dispatcherAvatar"
+              class="actors--avatar actors--no-avatar"
+            ></span>
+            <div class="flex flex--column">
+              <span>{{ element.dispatcher }}</span>
+              <span class="actors--role">Dispatcher</span>
+            </div>
+          </div>
+          <button
+            mat-icon-button
+            (click)="assaignDispatcher(element)"
+            *ngIf="element.statusOriginal !== tripStatus.COMPLETED"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>
+        <span *ngIf="selection && !selection.selected.length"></span>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="flex flex--column">
+          <span class="status">{{ element.status }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [length]="countTrips"
+    [pageSize]="limit"
+    [pageSizeOptions]="pageLimit"
+    (page)="changePage($event)"
+  >
+  </mat-paginator>
+</div>

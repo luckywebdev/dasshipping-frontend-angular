@@ -1,0 +1,118 @@
+@import './colors.scss';
+
+.text {
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+
+  &--center {
+    text-align: center;
+
+    &_vertical {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+
+  &__decoration {
+    &--none {
+      text-decoration: none;
+    }
+  }
+
+  &--overflow {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &--right {
+    text-align: right;
+  }
+
+  &--left {
+    text-align: left;
+  }
+
+  &--upper_case {
+    text-transform: uppercase;
+  }
+
+  &--capitalize {
+    text-transform: capitalize;
+  }
+
+  &__color {
+    &--black {
+      color: black;
+    }
+
+    &--black-two {
+      color: $black-two;
+    }
+
+    &--white {
+      color: white;
+    }
+
+    &--black-three {
+      color: $black-three;
+    }
+
+    &--emperor {
+      color: $emperor;
+    }
+
+    &--dark {
+      color: $dark;
+    }
+
+    &--brown-grey {
+      color: $brown-grey;
+    }
+
+    &--brownish-grey {
+      color: $brownish-grey;
+    }
+
+    &--dodger-blue {
+      color: $dodger-blue;
+    }
+
+    &--dark-500 {
+      color: $dark-500;
+    }
+
+    &--primary-500 {
+      color: $primary-500;
+    }
+
+    &--pale-blue {
+      color: $pale-blue;
+    }
+
+    &--brown-grey-two {
+      color: $brown-grey-two;
+    }
+
+    &--red {
+      color: $red;
+    }
+  }
+
+  &--disable_select {
+    cursor: default;
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently supported by Chrome and Opera */
+  }
+}

@@ -1,0 +1,16 @@
+.actions {
+  margin-top: 20px;
+  width: 100%;
+
+  &--button {
+    margin: 0 5px;
+  }
+}
+
+form {
+  width: 100%;
+
+  mat-form-field {
+    width: 100%;
+  }
+}

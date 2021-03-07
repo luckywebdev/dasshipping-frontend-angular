@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Car-t cabinet</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+  <app-root>
+    <div class="dashboard-loader"></div>
+    <style>
+      .dashboard-loader {
+        margin: 0 auto;
+        height: 50px;
+        width: 50px;
+        border: 6px solid rgba(0, 0, 0, 0);
+        border-color: #efefef #438afe #efefef #438afe;
+        border-radius: 50%;
+        -webkit-animation: spin 2s linear infinite;
+        -moz-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+        position: absolute;
+        top: calc(50% - 25px);
+        left: calc(50% - 25px);
+      }
+
+      @-moz-keyframes spin {
+        100% {
+          -moz-transform: rotate(360deg);
+        }
+      }
+
+      @-webkit-keyframes spin {
+        100% {
+          -webkit-transform: rotate(360deg);
+        }
+      }
+
+      @keyframes spin {
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+
+    </style>
+  </app-root>
+</body>
+
+</html>

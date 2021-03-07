@@ -1,0 +1,15 @@
+<div class="flex flex__align-items--center flex--column">
+  <h3 textWeight="bold" textColor="black-two">{{ data.tripId ? 'Change Trip' : 'Add to Trip'}}</h3>
+
+  <form [formGroup]="dataForm" class="forgot-password__form flex flex--column flex--box">
+    <ng-select placeholder="Select trip" [virtualScroll]="true" formControlName="tripId" (scrollToEnd)="getListTrips()">
+      <ng-option *ngFor="let trip of trips" [value]="trip.id">{{trip.id}}</ng-option>
+    </ng-select>
+  </form>
+
+  <div md-dialog-actions class="actions flex">
+    <button class="actions--button flex--box" mat-raised-button color="warn" (click)="dialogRef.close()">Cancel</button>
+    <button [disabled]="!dataForm.valid" (click)="addToTrip()" class="actions--button flex--box" mat-raised-button
+      color="primary">{{ data.tripId ? 'Save' : 'Add' }}</button>
+  </div>
+</div>

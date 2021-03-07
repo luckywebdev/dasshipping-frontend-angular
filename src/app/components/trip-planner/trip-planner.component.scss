@@ -1,0 +1,85 @@
+.planner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .planner_toggle {
+    position: absolute;
+    z-index: 1000;
+    left: 5px;
+    bottom: 5px;
+    background-color: #ffffff;
+    padding: 0 5px;
+    border-radius: 3px;
+  }
+
+  &--button {
+    font-size: 14px;
+  }
+
+  &--block {
+    padding: 10px;
+    background-color: white;
+    margin: 5px;
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+      0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  &--calculate {
+    position: absolute;
+    right: 0;
+    width: 260px;
+    height: 100%;
+    z-index: 1000;
+  }
+
+  &--item {
+    margin: 5px 0;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.87);
+
+    &-second {
+      color: rgba(0, 0, 0, 0.54);
+    }
+
+    mat-checkbox {
+      margin-right: 5px;
+    }
+  }
+
+  &--margin {
+    &-top {
+      margin-top: 5px;
+      font-weight: bold;
+    }
+
+    &-bottom {
+      margin-bottom: 5px;
+    }
+  }
+
+  &--second {
+    height: 100%;
+  }
+
+  &--pick {
+    background-color: #d4fc80;
+  }
+
+  &--delivery {
+    background-color: #94ccff;
+  }
+
+  &--partial {
+    opacity: 0.4;
+  }
+
+  &--visible {
+    opacity: 1;
+  }
+}
+
+#map {
+  width: 100%;
+  min-height: 70vh;
+}

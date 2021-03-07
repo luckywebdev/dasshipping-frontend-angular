@@ -1,0 +1,112 @@
+<div class="mat-elevation-z8">
+  <div class="loading--spinner" *ngIf="loading">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+  <table mat-table [dataSource]="dataSource" (matSortChange)="sortData($event)" matSort>
+
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="$event ? selectElement(row) : null"
+          [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)"> {{element.uuid}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="pickLocation">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Origin</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)"> {{element.pickLocation}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="distance">
+      <th mat-header-cell *matHeaderCellDef>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)">
+        <div class="flex flex--column flex__align-items--center" *ngIf="element.distance">
+          <span> {{element.distance}}mi</span>
+          <span class="arrow--right"></span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="deliveryLocation">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Destination </span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)"> {{element.deliveryLocation}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cargo">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Cargo</span>
+      </th>
+      <td mat-cell *matCellDef="let element" [innerHtml]="element.cargo" (click)="goOrder(element)"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="shipper">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Shipper</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)"> {{element.shipper}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="trailerType">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Trailer type </span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)"> {{element.trailerType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="pickDate">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Pickup Date </span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)"> {{element.pickDate}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="age">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Age</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)"> {{element.age}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>
+        <span></span>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="flex flex--column" *ngIf="element.action">
+          <span class="offer offer--price cursor" (click)="request(element)">Ask to book
+            {{element.price}}$</span>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="groupSelect">
+      <td mat-cell *matCellDef="let group">
+        <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="$event ? selectGroup(group) : null"
+          [checked]="selectionGroup.isSelected(group)" [aria-label]="checkboxLabelGroup(group)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="groupHeader">
+      <td mat-cell *matCellDef="let group" [attr.colspan]="displayedColumns.length">
+        {{group.group}}
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns; when: !isGroup"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['groupSelect','groupHeader']; when: isGroup" class="table--group"></tr>
+  </table>
+  <mat-paginator [length]="countOrders" [pageSize]="limit" [pageSizeOptions]="pageLimit" (page)="changePage($event)">
+  </mat-paginator>
+</div>

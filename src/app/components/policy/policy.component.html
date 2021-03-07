@@ -1,0 +1,18 @@
+<form [formGroup]="price" class="flex flex--column">
+  <span textSize="14" textWeight="bold" textColor="black-two" class="text--upper_case text--center">
+    {{data && data.id ? 'Edit Price' : 'Create price'}}</span>
+  <span textSize="12" textColor="dark-500" class="text--center">Lorem ipsum dolor sit amet.</span>
+
+  <mat-form-field>
+    <input formControlName="type" type="text" matInput placeholder="Car type">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input formControlName="price" type="number" step="0.01" min="0" max="100" matInput placeholder="Price per mile">
+  </mat-form-field>
+
+  <div class="flex flex__justify-content--center">
+    <button [disabled]="!price.valid" textWeight="bold" textSize="14" (click)="callFun()" class="text--upper_case"
+      mat-raised-button color="primary">{{data && data.id ?' Edit' : 'Create'}}</button>
+  </div>
+</form>

@@ -1,0 +1,21 @@
+<button mat-button matTooltipPosition="after" matTooltipClass="tooltip-users"
+  matTooltip="All Users have to be Activated Manualy after Invitation or Join Request and Drivers have to be linked to dispatchers trough their Profile Page. Pleasw Click in Dispatcher.">
+  <mat-icon textSize="22" textColor="dodger-blue">info</mat-icon>
+</button>
+<div class="mat-elevation-z8">
+  <mat-tab-group [selectedIndex]="selectedTab" mat-align-tabs="start">
+    <mat-tab label="All Users">
+      <app-account-list></app-account-list>
+    </mat-tab>
+    <mat-tab label="Invitations">
+      <app-invite-list [newInvite]="newInvite"></app-invite-list>
+    </mat-tab>
+    <mat-tab label="Join Request" *ngIf="getPermission()">
+      <app-requests></app-requests>
+    </mat-tab>
+  </mat-tab-group>
+
+  <button mat-button class="tabs__button" (click)="addUser()">
+    <mat-icon textSize="22" textColor="white">person_add</mat-icon>
+  </button>
+</div>

@@ -1,0 +1,41 @@
+<div class="register flex flex--box flex__justify-content--center flex__align-items--center">
+  <mat-card class="register--content">
+
+    <form [formGroup]="data" class="register flex flex--column">
+      <mat-form-field>
+        <input formControlName="email" type="email" matInput placeholder="Email">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input formControlName="firstName" type="text" matInput placeholder="First Name">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input formControlName="lastName" type="text" matInput placeholder="Last Name">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input formControlName="password" type="password" matInput placeholder="Password">
+      </mat-form-field>
+
+      <div class="register__form--decription flex flex--row flex__align-items--center">
+        <mat-icon class="register__form--icon">error_outline</mat-icon>
+        <span class="font__size--12">Make sure you display 8+ characters, caps, number, sign.</span>
+      </div>
+
+      <mat-form-field>
+        <input [errorStateMatcher]="matcher" formControlName="confirmPassword" type="password" matInput
+          placeholder="Confirm Password">
+      </mat-form-field>
+
+      <mat-checkbox color="primary" [required]="true" formControlName="terms" class="register__form--checkbox"
+        ngDefaultControl>Agree
+        with terms of service
+      </mat-checkbox>
+
+      <button [disabled]="!data.get('terms').value || validateFields()" (click)="register()"
+        class="register__form--button text--upper_case" mat-raised-button color="primary">Register</button>
+    </form>
+
+  </mat-card>
+</div>

@@ -1,0 +1,302 @@
+<div class="flex flex--column flex--box block--search">
+  <div class="flex flex--row flex--box block--width filters">
+    <div class="filters--header">FILTERS</div>
+    <button mat-button class="filters--button" (click)="clearFilters()">
+      Clear filters
+    </button>
+  </div>
+
+  <div class="flex flex--row flex--box block--width margin--top-10">
+    <form [formGroup]="filter" class="flex flex--column flex--box">
+      <div class="flex flex--row flex--box flex--wrap">
+        <div class="flex flex--column flex--box block--search-second">
+          <mat-form-field>
+            <mat-label>Include</mat-label>
+            <mat-select formControlName="include">
+              <mat-option *ngFor="let item of includes" [value]="item.value">
+                {{ item.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column flex--box block--search-second">
+          <mat-form-field>
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let item of statuses" [value]="item.value">
+                {{ item.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column flex--box block--search-first">
+          <mat-form-field>
+            <input matInput [matDatepicker]="fromCreated" placeholder="From creation date"
+              formControlName="fromCreatedDate" />
+            <mat-datepicker-toggle matSuffix [for]="fromCreated"></mat-datepicker-toggle>
+            <mat-datepicker #fromCreated></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column flex--box block--search-second">
+          <mat-form-field>
+            <input matInput [matDatepicker]="toCreated" placeholder="To creation date"
+              formControlName="toCreatedDate" />
+            <mat-datepicker-toggle matSuffix [for]="toCreated"></mat-datepicker-toggle>
+            <mat-datepicker #toCreated></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="flex flex--row flex--box flex--wrap">
+        <div class="flex flex--column flex--box block--search-second">
+          <mat-form-field>
+            <mat-label>Assigned to</mat-label>
+            <mat-select formControlName="assignedTo">
+              <mat-option *ngFor="let item of assigned" [value]="item.value">
+                {{ item.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column flex--box block--search-second">
+          <mat-form-field>
+            <mat-label>Orders by</mat-label>
+            <mat-select formControlName="orderByField">
+              <mat-option *ngFor="let item of orderByFields" [value]="item.value">
+                {{ item.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column flex--box block--search-first">
+          <mat-form-field>
+            <input matInput [matDatepicker]="fromDelivery" placeholder="From delivery date"
+              formControlName="fromDeliveryDate" />
+            <mat-datepicker-toggle matSuffix [for]="fromDelivery"></mat-datepicker-toggle>
+            <mat-datepicker #fromDelivery></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column flex--box block--search-second">
+          <mat-form-field>
+            <input matInput [matDatepicker]="toDelivery" placeholder="To delivery date"
+              formControlName="toDeliveryDate" />
+            <mat-datepicker-toggle matSuffix [for]="toDelivery"></mat-datepicker-toggle>
+            <mat-datepicker #toDelivery></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="flex flex--row flex--box block--width filters margin--top-20">
+    <div class="filters--header">FIELDS TO EXPORT</div>
+    <button mat-button class="filters--button" (click)="selectAll()">
+      Select all
+    </button>
+    <button mat-button class="filters--button" (click)="clearAll()">
+      Clear all
+    </button>
+  </div>
+
+  <div class="flex flex--row flex--box block--width margin--top-10">
+    <form [formGroup]="general" class="flex flex--column block--search-three">
+      <div class="flex flex--row fields--header">General</div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="importedOrderId" class="register__form--checkbox"
+          ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Imported Order ID</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="systemOrderId" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">System Order ID</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="cargo" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Cargo</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="vinNumbers" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Vin Numbers</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="creationDate" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Creation Date</span>
+        </mat-checkbox>
+      </div>
+    </form>
+
+    <form [formGroup]="pickupInfo" class="flex flex--column block--fields">
+      <div class="flex flex--row fields--header">Pickup Info</div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="date" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Date</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="name" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Name</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="address" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Address</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="city" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">City</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="state" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">State</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="zipCode" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Zip Code</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="phone" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Phone</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="email" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Email</span>
+        </mat-checkbox>
+      </div>
+    </form>
+
+    <form [formGroup]="deliveryInfo" class="flex flex--column block--fields">
+      <div class="flex flex--row fields--header">Delivery Info</div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="date" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Date</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="name" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Name</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="address" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Address</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="city" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">City</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="state" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">State</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="zipCode" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Zip Code</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="phone" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Phone</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="email" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Email</span>
+        </mat-checkbox>
+      </div>
+    </form>
+
+    <form [formGroup]="shipperInfo" class="flex flex--column block--fields">
+      <div class="flex flex--row fields--header">Shipper Info</div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="name" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Name</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="address" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Address</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="city" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">City</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="state" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">State</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="zipCode" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Zip Code</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="phone" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Phone</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="email" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Email</span>
+        </mat-checkbox>
+      </div>
+    </form>
+
+    <form [formGroup]="paymentInfo" class="flex flex--column block--fields">
+      <div class="flex flex--row fields--header">Payment Info</div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="terms" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Terms</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="status" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Status</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="amount" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Amount</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="BrokerFee" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Brocker Fee</span>
+        </mat-checkbox>
+      </div>
+      <div class="flex flex--row margin--top-5">
+        <mat-checkbox color="primary" formControlName="method" class="register__form--checkbox" ngDefaultControl>
+          <span textSize="13" textColor="brownish-grey">Method</span>
+        </mat-checkbox>
+      </div>
+    </form>
+  </div>
+
+  <div class="flex flex--row flex--box block--width filters margin--top-30">
+    <div class="filters--header">SEND REPORT</div>
+  </div>
+
+  <div class="flex flex--row flex--box block--width margin--top-10">
+    <mat-form-field class="filters--input block--search-three">
+      <input type="email" matInput placeholder="Email" [(ngModel)]="emailAddress" />
+    </mat-form-field>
+    <button mat-button class="filters--button filters--send" (click)="checkSendReport()" [disabled]="!emailAddress">
+      <mat-icon>send</mat-icon>
+      SEND
+    </button>
+  </div>
+</div>

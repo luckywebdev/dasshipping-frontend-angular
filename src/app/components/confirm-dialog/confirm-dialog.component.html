@@ -1,0 +1,18 @@
+<div class="flex flex__align-items--center flex--column">
+  <h1 textSize="14" textWeight="bold" textColor="black-two">{{data?.action}}</h1>
+  <span *ngIf="data?.description" textSize="13" textColor="brown-grey">{{data?.description}}</span>
+
+
+  <mat-form-field *ngIf="data?.reason" class="actions__textarea">
+    <textarea #reason [(ngModel)]="message" class="actions__textarea--input" [rows]="rows" [maxLength]="data?.maxlength"
+      [placeholder]="data?.placeholder" matInput></textarea>
+    <mat-hint align="end">{{reason.value.length}} / {{data?.maxlength}}</mat-hint>
+  </mat-form-field>
+
+  <div md-dialog-actions class="actions flex">
+    <button class="actions--button flex--box" mat-raised-button color="warn"
+      (click)="dialogRef.close()">{{data?.cancelButton||'Cancel'}}</button>
+    <button class="actions--button flex--box" mat-raised-button color="primary"
+      (click)="dialogRef.close(message || true)">{{data?.nameButton}}</button>
+  </div>
+</div>

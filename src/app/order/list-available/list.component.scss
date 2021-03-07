@@ -1,0 +1,14 @@
+@import 'src/styles/colors.scss';
+.mat-column-startDate {
+  min-width: 75px;
+}
+
+.mat-column-age {
+  min-width: 50px;
+}
+.table--group{
+  background-color: $polar;
+  td{
+    border: none;
+  }
+}

@@ -1,0 +1,182 @@
+<div class="mat-elevation-z8">
+  <div class="loading--spinner" *ngIf="loading">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    (matSortChange)="sortData($event)"
+    matSort
+  >
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox
+          color="primary"
+          (change)="$event ? masterToggle() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+          [aria-label]="checkboxLabel()"
+        >
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox
+          color="primary"
+          (click)="$event.stopPropagation()"
+          (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)"
+          [aria-label]="checkboxLabel(row)"
+        >
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>
+        <div *ngIf="selection && selection.selected.length">
+          <button mat-icon-button (click)="sendEmails()">
+            <mat-icon>send</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteLeads()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="flex flex--column flex__align-items--center profit">
+          <span class="profit--item"> Profit:{{ element.profit }}$</span>
+          <span class="profit--item-second color--brune">{{ element.id }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="pickLocation">
+      <th mat-header-cell *matHeaderCellDef>
+        <span *ngIf="selection && !selection.selected.length">Origin</span>
+      </th>
+      <td mat-cell *matCellDef="let element" class="color--brune">
+        {{ element.pickLocation }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="distance">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div
+          class="flex flex--column flex__align-items--center"
+          *ngIf="element.distance"
+        >
+          <span class="color--brune"> {{ element.distance }}mi</span>
+          <span class="arrow--right"></span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="deliveryLocation">
+      <th mat-header-cell *matHeaderCellDef>
+        <span *ngIf="selection && !selection.selected.length"
+          >Destination
+        </span>
+      </th>
+      <td mat-cell *matCellDef="let element" class="color--brune">
+        {{ element.deliveryLocation }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cargo">
+      <th mat-header-cell *matHeaderCellDef>
+        <span *ngIf="selection && !selection.selected.length">Cargo</span>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="flex flex--row flex__align-items--center">
+          <div [innerHtml]="element.cargo" class="color--brune"></div>
+          <button
+            *ngIf="!element.carType"
+            mat-icon-button
+            (click)="completCar(element)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="shipper">
+      <th mat-header-cell *matHeaderCellDef>
+        <span *ngIf="selection && !selection.selected.length">Shipper</span>
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="color--brune"
+        [innerHtml]="element.shipper"
+      ></td>
+    </ng-container>
+
+    <ng-container matColumnDef="notes">
+      <th mat-header-cell *matHeaderCellDef>
+        <span *ngIf="selection && !selection.selected.length"
+          >Trailer type
+        </span>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="flex flex--row flex__align-items--center">
+          <span class="color--blue">Notes</span>
+          <button
+            *ngIf="!element.notes"
+            mat-icon-button
+            (click)="addNote(element)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div class="flex flex--column" *ngIf="element.action">
+          <button
+            [disabled]="!element.carType"
+            class="offer--button cursor flex flex--column flex__align-items--center"
+            (click)="newOfferDiscount(element)"
+            [ngClass]="[
+              element.carType
+                ? ' offer--button-active'
+                : ' offer--button-disabled'
+            ]"
+          >
+            <span class="offer--button-title">Offer</span>
+            <span class="offer--button-title">{{ element.price }}$</span>
+            <span class="offer--button-label">
+              Click here to change the offer
+            </span>
+          </button>
+          <button
+            [disabled]="!(element.sentCount < 3)"
+            class="offer offer--offer cursor"
+            (click)="element.carType && sentEmail(element.id)"
+            [ngClass]="[!(element.sentCount < 3)  || !element.carType ? ' offer-disabled' : '']"
+          >
+            Send {{ element.sentCount }}
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns; when: !isGroup"
+    ></tr>
+  </table>
+
+  <mat-paginator
+    [length]="countLeads"
+    [pageSize]="limit"
+    [pageSizeOptions]="pageLimit"
+    (page)="changePage($event)"
+  >
+  </mat-paginator>
+</div>

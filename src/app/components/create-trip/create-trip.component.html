@@ -1,0 +1,26 @@
+<div class="flex flex__align-items--center flex--column">
+  <h3 textWeight="bold" textColor="black-two">{{ data.id ? 'Edit Trip' : 'Create Trip'}}</h3>
+
+  <form [formGroup]="dataForm" class="forgot-password__form flex flex--column flex--box">
+    <!-- <mat-form-field *ngIf="!data.id">
+      <input formControlName="name" type="text" matInput placeholder="Trip Name">
+    </mat-form-field> -->
+
+    <ng-select placeholder="Select dispatcher" [virtualScroll]="true" formControlName="dispatcherId"
+      (scrollToEnd)="getListDispatchers()" *ngIf="currentUser.roleId !== roles.DISPATCHER">
+      <ng-option *ngFor="let dispatcher of dispatchers" [value]="dispatcher.id">{{dispatcher.firstName}}
+        {{dispatcher.lastName}}</ng-option>
+    </ng-select>
+
+    <ng-select placeholder="Select driver" [virtualScroll]="true" formControlName="driverId"
+      (scrollToEnd)="getListDrivers()">
+      <ng-option *ngFor="let driver of drivers" [value]="driver.id">{{driver.firstName}} {{driver.lastName}}</ng-option>
+    </ng-select>
+  </form>
+
+  <div md-dialog-actions class="actions flex">
+    <button class="actions--button flex--box" mat-raised-button color="warn" (click)="dialogRef.close()">Cancel</button>
+    <button [disabled]="!dataForm.valid" (click)="checkTrip()" class="actions--button flex--box" mat-raised-button
+      color="primary">{{ data.id ? 'Edit' : 'Create'}}</button>
+  </div>
+</div>

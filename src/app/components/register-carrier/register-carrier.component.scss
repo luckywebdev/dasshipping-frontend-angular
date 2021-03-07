@@ -1,0 +1,60 @@
+.register {
+  padding: 25px 50px;
+  &--error {
+    color: red;
+    font-size: 12px;
+    margin-top: -15px;
+  }
+
+  &--errors {
+    color: red;
+    font-size: 12px;
+    margin-top: -10px;
+  }
+
+  &__logo {
+    margin-bottom: 25px;
+
+    img {
+      width: 150px;
+      height: 100px;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+  }
+
+  &--title {
+    margin-bottom: 5px;
+  }
+
+  &--subtitle {
+    margin-bottom: 15px;
+  }
+
+  &__form {
+    &--checkbox {
+      margin-bottom: 20px;
+    }
+
+    &--button {
+      width: 141px;
+      align-self: flex-end;
+      margin-bottom: 10px;
+    }
+
+    &--file {
+      padding: 0 10px;
+
+      &-picker {
+        margin: 7px 0;
+      }
+    }
+  }
+  .additional {
+    margin: 5px 0;
+  }
+  .additional-info {
+    font-size: 13px;
+    color: #777777;
+  }
+}

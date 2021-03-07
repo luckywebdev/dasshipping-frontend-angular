@@ -1,0 +1,55 @@
+@import 'src/styles/colors.scss';
+
+.header {
+  height          : 56px;
+  background-color: $dodger-blue;
+
+  &__name-route {
+    color: $white;
+  }
+
+  &__logo {
+    width : 320px;
+    cursor: pointer;
+  }
+
+  &__icon {
+    &--img {
+      width       : 30px;
+      height      : 30px;
+      font-size   : 30px;
+      margin-right: 10px;
+    }
+
+    &--company {
+      line-height   : 0.97;
+      letter-spacing: 2.2px;
+    }
+
+    &--dotnumber {
+      margin-top : 5px;
+      line-height: 10px;
+      text-align : left;
+    }
+
+    &--text {
+      display       : flex;
+      flex-direction: column;
+    }
+  }
+
+  &__user {
+    padding: 0 40px;
+    width  : calc(100% - 320px);
+  }
+
+  &__profile {
+    &--avatar {
+      width        : 28px;
+      height       : 28px;
+      border       : 2px solid $white;
+      border-radius: 100%;
+      margin-right : 9px;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+<div class="header flex">
+
+  <div class="sidebar__header header__logo flex flex__align-items--center flex__justify-content--center">
+    <div class="header__icon flex flex--row flex__align-items--center flex__justify-content--center"
+      (click)="toogleSideMenu()">
+      <mat-icon textColor="white" class="header__icon--img">menu</mat-icon>
+      <span class="text--center font__family--raleway header__icon--text" textColor="pale-blue">
+        <span class="text--upper_case header__icon--company" textSize="20" fontWeight="800">{{companyName}}</span>
+        <span *ngIf="dotNumber" class="header__icon--dotnumber" textSize="11">{{dotNumber}}</span>
+      </span>
+    </div>
+  </div>
+  <div class="flex flex__align-items--center header__name-route">{{nameRoute}}
+    <span *ngIf="notifications" class="notifications">{{notifications}}</span>
+  </div>
+  <div class="header__user flex flex__justify-content--end">
+    <div [matMenuTriggerFor]="appMenu" class="flex flex__align-items--center block--click">
+      <img class="header__profile--avatar" src="{{user?.avatarUrl}}" alt="">
+      <span textSize="14" textWeight="600" textColor="white">{{user?.firstName}} {{user?.lastName}}</span>
+      <mat-icon textColor="white">arrow_drop_down</mat-icon>
+    </div>
+
+    <mat-menu #appMenu="matMenu" xPosition="before">
+      <button (click)="myProfile()" mat-menu-item>My Profile</button>
+      <button (click)="changePassword()" mat-menu-item>Change Password</button>
+      <button (click)="myCompany()" mat-menu-item
+        *ngIf="user.roleId === roles.COMPANY_ADMIN || user.roleId === roles.DISPATCHER">My Company</button>
+      <button (click)="logout()" mat-menu-item>Logout</button>
+    </mat-menu>
+  </div>
+</div>

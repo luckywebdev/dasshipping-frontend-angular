@@ -1,0 +1,16 @@
+<div class="flex flex__align-items--center flex--column">
+  <h3 textWeight="bold" textColor="black-two">Create new note</h3>
+
+  <form [formGroup]="dataForm" class="forgot-password__form flex flex--row flex--box">
+    <mat-form-field class="actions__textarea">
+      <textarea #reason class="actions__textarea--input" maxLength="120" placeholder="Note" formControlName="note"
+        matInput></textarea>
+      <mat-hint align="end">{{reason.value.length}} / 120</mat-hint>
+    </mat-form-field>
+  </form>
+
+  <div md-dialog-actions class="actions flex">
+    <button class="actions--button flex--box" mat-raised-button color="warn" (click)="dialogRef.close()">Cancel</button>
+    <button class="actions--button flex--box" mat-raised-button color="primary" (click)="create()">Send</button>
+  </div>
+</div>

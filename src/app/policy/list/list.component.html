@@ -1,0 +1,138 @@
+<div class="mat-elevation-z8">
+  <div class="percent--header">
+    <h3>General Settings</h3>
+  </div>
+  <div class="flex flex-row percent--form">
+    <form [formGroup]="data" class="flex flex--row flex__align-items--end">
+      <div class="flex flex--row">
+        <div class="flex flex--row flex--wrap">
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" step="0.01" min="0" max="100" placeholder="Minimum Profit Percent" matInput
+              formControlName="minimumProfitPercentage" [readonly]="readonly" />
+          </mat-form-field>
+
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" step="0.01" min="0" max="100" placeholder="Recommended Percent" matInput
+              formControlName="recommendedProfitPercentage" [readonly]="readonly" />
+          </mat-form-field>
+
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" step="0.01" min="0" max="100" placeholder="INOP additional(%)" matInput
+              formControlName="inopAdditionalPricePercentage" [readonly]="readonly" />
+          </mat-form-field>
+
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" step="0.01" min="0" max="100" placeholder="Enclosed Truck additional price" matInput
+              formControlName="enclosedAdditionalPricePercentage" [readonly]="readonly" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex--row flex--wrap">
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" step="1" min="0" max="1000" placeholder="Service fee (Absolute)" matInput
+              formControlName="serviceAbsoluteFee" [readonly]="readonly" />
+          </mat-form-field>
+
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" placeholder="Minimal Sales Price" matInput formControlName="minimalSalePrice"
+              [readonly]="readonly" />
+          </mat-form-field>
+
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" placeholder="Credit Card Payment Fee(%)" matInput
+              formControlName="creditCardPaymentFee" [readonly]="readonly" />
+          </mat-form-field>
+
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" placeholder="Ach Payment Fee($)" matInput formControlName="achPaymentFee"
+              [readonly]="readonly" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex--row flex--wrap">
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" step="1" min="0" max="1000" placeholder="Lifted additional(%)" matInput
+              formControlName="liftedPercentage" [readonly]="readonly" />
+          </mat-form-field>
+
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" placeholder="Head Rack additional(%)" matInput formControlName="headRackPercentage"
+              [readonly]="readonly" />
+          </mat-form-field>
+
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" placeholder="Handicap additional(%)" matInput formControlName="handicapPercentage"
+              [readonly]="readonly" />
+          </mat-form-field>
+
+          <mat-form-field class="flex flex--box general--item">
+            <input type="number" placeholder="Utility Bed additional(%)" matInput formControlName="utilityBedPercentage"
+              [readonly]="readonly" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <button *ngIf="readonly" (click)="editMode()" class="percent--form__button align-content-end general--button"
+        color="primary" mat-icon-button>
+        <i class="material-icons">
+          lock
+        </i>
+      </button>
+      <button *ngIf="!readonly" (click)="saveGeneral()" class="percent--form__button align-content-end general--button"
+        mat-icon-button color="primary">
+        <i class="material-icons">
+          lock_open
+        </i>
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="mat-elevation-z8 percent">
+  <div class="loading--spinner" *ngIf="loading">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+  <button (click)="syncPolicy()" class="general--sync" mat-raised-button color="primary">
+    Sync
+  </button>
+  <table mat-table [dataSource]="dataSource" (matSortChange)="sortData($event)" matSort>
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <span class="label-type">Car Type</span>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="label-type">
+          <span *ngIf="element.isNew" class="label-new">NEW</span>
+          {{ element.type }}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <span> Price </span>
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element.price }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button (click)="addPrice(element)">
+          <mat-icon textSize="22" textColor="dodger-blue">edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="checkRemove(element)">
+          <mat-icon textSize="22" textColor="red">delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator [length]="countPrices" [pageSize]="limit" [pageSizeOptions]="pageLimit" (page)="changePage($event)">
+  </mat-paginator>
+
+  <button mat-button class="tabs__button" (click)="addPrice()">
+    <mat-icon textSize="22" textColor="white">library_add</mat-icon>
+  </button>
+</div>

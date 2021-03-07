@@ -1,0 +1,79 @@
+@import "src/styles/colors";
+
+.info-payment {
+  margin-left: 10px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.flex--box1 {
+  flex: 1.5;
+}
+
+button {
+  max-height: 40px;
+}
+
+.column {
+  &--first {
+    margin-right: 15px;
+  }
+}
+
+.actions {
+  button {
+    margin-top: 7px;
+    margin-bottom: 7px;
+  }
+}
+
+.avatar_note {
+  background-color: #cccccc;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.cars {
+  &--input {
+    margin: 0 5px;
+  }
+
+  &--actions {
+    min-width: 120px;
+
+    &-red {
+      color: $red;
+    }
+
+    &-blue {
+      color: $dodger-blue;
+    }
+  }
+}
+
+.payment-select {
+  padding: 10px;
+  border: 1px solid #438afe;
+  border-radius: 4px;
+}
+
+.margin {
+  &--right {
+    &-5 {
+      margin-right: 5px;
+    }
+
+    &-10 {
+      margin-right: 10px;
+    }
+
+    &-20 {
+      margin-right: 20px;
+    }
+
+    &-30 {
+      margin-right: 30px;
+    }
+  }
+}

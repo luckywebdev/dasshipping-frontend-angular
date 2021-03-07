@@ -1,0 +1,20 @@
+<div class="flex flex__align-items--center flex--column">
+  <h3 textWeight="bold" textColor="black-two">
+    {{data && data.role === roleDispetcher ? 'Assign dispatcher' : 'Assign driver'}}
+  </h3>
+
+  <form [formGroup]="dataForm" class="forgot-password__form flex flex--column flex--box">
+    <ng-select [placeholder]="data.role === roleDispetcher ? 'Select dispatcher' :'Select driver'"
+      [virtualScroll]="true" formControlName="accountId" (scrollToEnd)="getListAccounts()">
+      <ng-option *ngFor="let account of accounts" [value]="account.id">{{account.firstName}}
+        {{account.lastName}}</ng-option>
+    </ng-select>
+
+  </form>
+
+  <div md-dialog-actions class="actions flex">
+    <button class="actions--button flex--box" mat-raised-button color="warn" (click)="dialogRef.close()">Cancel</button>
+    <button [disabled]="!dataForm.valid" (click)="editTrip()" class="actions--button flex--box" mat-raised-button
+      color="primary">Assign</button>
+  </div>
+</div>

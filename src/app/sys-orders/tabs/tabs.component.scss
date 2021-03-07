@@ -1,0 +1,30 @@
+@import 'src/styles/colors.scss';
+
+/deep/ .mat-tab-label {
+  flex: 1;
+  opacity: 1 !important;
+}
+
+.filter {
+  margin-bottom: 20px;
+
+  &--input {
+    margin: 0 15px;
+  }
+}
+
+.tabs {
+  &--title {
+    opacity: 0.6;
+  }
+}
+
+.counts {
+  margin-left: 10px;
+  background-color: $dodger-blue;
+  color: $white;
+  padding: 5px;
+  border-radius: 20px;
+  opacity: 1;
+  min-width: 20px;
+}

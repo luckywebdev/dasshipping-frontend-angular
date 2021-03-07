@@ -1,0 +1,88 @@
+.mat-column-actions {
+  width: 20% !important;
+}
+
+.mat-column-price,
+.mat-column-type {
+  width: 40% !important;
+}
+
+.percent {
+  margin-top: 20px;
+  position  : relative;
+
+  &--header {
+    padding: 10px;
+
+    h3 {
+      margin: 0;
+    }
+  }
+
+  &--form {
+    padding: 10px;
+
+    &__button {
+      margin-left: 10px;
+      height     : 40px;
+    }
+  }
+
+  form {
+    width: 100%;
+
+    mat-form-field {
+      margin: 0 5px;
+    }
+  }
+}
+
+.general {
+  &--button {
+    margin-bottom: 20px;
+  }
+
+  &--sync {
+    margin-left: 15px;
+    margin-top : 15px;
+    height     : 40px;
+  }
+
+  &--item {
+    margin-right: 10px
+  }
+}
+
+.label-type {
+  position    : relative;
+  padding-left: 40px;
+}
+
+.label-new {
+  color           : #ffffff;
+  background-color: #FFA000;
+  height          : 20px;
+  font-size       : 12px;
+  font-weight     : 600;
+  position        : absolute;
+  left            : 0;
+  top             : 0;
+  display         : flex;
+  align-items     : center;
+  padding         : 0 5px;
+  justify-content : center;
+  width           : 30px;
+  margin-left     : -20px;
+}
+
+.label-new::after {
+  content      : "";
+  width        : 0;
+  height       : 0;
+  border-top   : 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left  : 10px solid #FFA000;
+  position     : absolute;
+  right        : -10px;
+  top          : 0;
+}

@@ -1,0 +1,23 @@
+<div class="flex flex__align-items--center flex--column">
+  <h3 textWeight="bold" textColor="black-two">{{data.message}}</h3>
+
+  <form [formGroup]="dataForm" class="forgot-password__form flex flex--column flex--box">
+    <mat-form-field>
+      <input matInput [matDatepicker]="pick_date" placeholder="Pick Date" formControlName="pickDate">
+      <mat-datepicker-toggle matSuffix [for]="pick_date"></mat-datepicker-toggle>
+      <mat-datepicker #pick_date></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [matDatepicker]="delivery_date" placeholder="Delivery Date" formControlName="deliveryDate">
+      <mat-datepicker-toggle matSuffix [for]="delivery_date"></mat-datepicker-toggle>
+      <mat-datepicker #delivery_date></mat-datepicker>
+    </mat-form-field>
+  </form>
+
+  <div md-dialog-actions class="actions flex">
+    <button class="actions--button flex--box" mat-raised-button color="warn"
+      (click)="dialogRef.close()">Decline</button>
+    <button [disabled]="!dataForm.valid" (click)="checkDispatch()" class="actions--button flex--box" mat-raised-button
+      color="primary">{{data.id ? 'Edit' : 'Request'}}</button>
+  </div>
+</div>

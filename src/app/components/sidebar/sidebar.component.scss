@@ -1,0 +1,60 @@
+@import 'src/styles/colors.scss';
+
+.sidebar {
+  width: 320px;
+
+  &__category {
+    padding-right: 15px;
+    border-bottom: 1px solid $very-light-pink;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  &__header {
+    padding: 0 32px;
+    height: 56px;
+    background-color: $dodger-blue;
+  }
+
+  &--title {
+    margin-bottom: 5px;
+  }
+
+
+  &__item {
+    outline: none;
+    padding: 10px 15px;
+
+    &--child {
+      margin-left: 20%;
+    }
+
+    &--outline {
+      outline: none;
+    }
+
+    &--icon {
+      margin-right: 16px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &--arrow {
+      width: 12px;
+      height: 12px;
+
+      &--child {
+        width: 10px;
+        height: 10px;
+      }
+
+      &--opened {
+        width: 12px;
+        height: 12px;
+        transform: rotate(90deg);
+      }
+    }
+  }
+}

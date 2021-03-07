@@ -1,0 +1,50 @@
+try now
+what? can't create table
+wait, may be data was not stored to DB
+do you know cred for any of those accounts?
+
+
+
+
+do you need my assistance for now?
+oh, thanks
+just now I'll try myself
+
+
+by the way can you explain again why db does not installed?
+
+- first: PostgreSQL requires specific permissions for data folder. By default
+Docker on Windows mounts data store as share - and it has no way to provide correct
+permissions to data folder
+I assigned dedicated local volume to PgSQL container
+- then: by default PostgreSQL uses hba.conf to specify auth model used for different 
+connections. It seems that app uses postgres user but no password was assigned to him
+I changed auth model to trust - so anybody may connect to PgSQL in container w/o 
+password
+
+-----
+
+I'll disconnect. Is it OK?
+ok. so can I run the frontend with the backend?
+you can restart both containers - they will keep current config. Or what
+do you mean?
+
+oh, I mean currently app container for the backend and db container run in docker
+right?
+
+db - yes. Let's check for app
+
+Yes, TCP 3000 )node) and TCP 5432 (pg_sql) are in 
+containers. 
+ok good, so I can run frontend with these ?
+right?
+yes, it should work =) I mean: ok thanykou may start but it's necessary to view logs 
+
+DB is able for connection via :5432 (take a look on pgAdmin - it's connected to the container)
+app backend is also up but it may require some verification of valid work too.
+May b some API tests via Postman for example
+
+
+disconnecting, ping me in Slack 
+ok thanks
+great

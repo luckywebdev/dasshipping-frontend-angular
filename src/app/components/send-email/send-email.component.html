@@ -1,0 +1,55 @@
+<div class="flex flex__align-items--center flex--column">
+  <h1 textSize="14" textWeight="bold" textColor="black-two">
+    {{ data.textHeader }}
+  </h1>
+
+  <div class="flex flex--column flex--box send--invoice">
+    <form [formGroup]="invoice">
+      <div class="flex flex--column">
+        <mat-form-field>
+          <input
+            type="text"
+            formControlName="email"
+            matInput
+            placeholder="Email"
+          />
+        </mat-form-field>
+      </div>
+      <div class="flex flex--column" *ngIf="data.checkDate">
+        <mat-form-field>
+          <input
+            matInput
+            [matDatepicker]="invoiceDueDate"
+            placeholder="Date"
+            formControlName="dueDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="invoiceDueDate"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #invoiceDueDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+
+  <div md-dialog-actions class="actions flex">
+    <button
+      class="actions--button flex--box"
+      mat-raised-button
+      color="warn"
+      (click)="dialogRef.close()"
+    >
+      Cancel
+    </button>
+    <button
+      class="actions--button flex--box"
+      mat-raised-button
+      color="primary"
+      (click)="sendInvoice()"
+      [disabled]="!invoice.valid"
+    >
+      {{ data.textButton }}
+    </button>
+  </div>
+</div>

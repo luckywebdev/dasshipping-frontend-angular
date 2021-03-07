@@ -1,0 +1,145 @@
+<div class="mat-elevation-z8">
+  <div class="loading--spinner" *ngIf="loading">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+  <div class="flex flex--column order" *ngFor="let element of dataSource.data"
+    [ngClass]="{ highlight: element.existNotify }">
+    <div class="flex flex--column">
+      <div class="flex flex--row">
+        <div class="flex flex--column cursor" (click)="goOrder(element)">
+          <div class="flex flex--row __align-items--center order--row-first"
+            [ngClass]="{ 'order--canceled-text': element.status === orderStatuses.CANCELED }">
+            <span class="table_custom-colomn table_custom-center">UUID:</span>
+            <span class="table_custom-info">{{ element.uuid }}</span>
+            <span class="order--status table_custom-info"
+              [ngClass]="{ 'order--canceled-text': element.status === orderStatuses.CANCELED }">{{
+              element.viewStatus
+            }}</span>
+          </div>
+        </div>
+
+        <div class="flex flex--column cursor" (click)="goOrder(element)">
+          <div class="flex flex--row __align-items--center order--row-first orders">
+            <span class="table_custom-colomn table_custom-center">Distance:</span>
+            <span class="table_custom-info">{{ element.distance }}ml</span>
+          </div>
+        </div>
+
+        <div class="flex flex--column cursor" (click)="goOrder(element)">
+          <div class="flex flex--row __align-items--center order--row-first orders">
+            <span class="table_custom-colomn table_custom-center"> Price:</span>
+            <span class="table_custom-info">{{ element.price }}$</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex--row orders">
+        <div class="flex flex--column order--row-second cursor" (click)="goOrder(element)">
+          <div class="flex flex--row table_custom-colomn">
+            Pick
+          </div>
+          <div class="flex flex--row orders orders-date table_custom-info" [innerHtml]="element.pick"></div>
+        </div>
+
+        <div class="flex flex--column order--row-second cursor" (click)="goOrder(element)">
+          <div class="flex flex--row table_custom-colomn">
+            Delivery
+          </div>
+          <div class="flex flex--row orders orders-date table_custom-info" [innerHtml]="element.delivery"></div>
+        </div>
+
+        <div class="flex flex--column order--row-second cursor" (click)="goOrder(element)">
+          <div class="flex flex--row table_custom-colomn">
+            Shipper
+          </div>
+          <div class="flex flex--row orders table_custom-info">
+            {{ element.shipper }}
+          </div>
+        </div>
+
+        <div class="flex flex--column order--row-second cursor" (click)="goOrder(element)">
+          <div class="flex flex--row table_custom-colomn">
+            Trailer Type
+          </div>
+          <div class="flex flex--row orders table_custom-info">
+            {{ element.trailerType }}
+          </div>
+        </div>
+
+        <div class="flex flex--column order--row-second cursor" (click)="goOrder(element)">
+          <div class="flex flex--row table_custom-colomn">
+            Cargo
+          </div>
+          <div class="flex flex--row orders table_custom-info" [innerHtml]="element.cargo"></div>
+        </div>
+
+        <div class="flex flex--column order--row-second"
+          *ngIf="path === pathOrdersTab.NEW_LOADS && element.status !== orderStatuses.CANCELED">
+          <div *ngIf="!element.tripId && checkPermissonTrip(element.status)"
+            class="offer cursor offer--offer cursor order--button" (click)="createTrip(element)">
+            Create a trip
+          </div>
+          <div *ngIf="!element.tripId && checkPermissonTrip(element.status)"
+            class="offer cursor  offer--price cursor order--button" (click)="addTrip(element)">
+            Add to trip
+          </div>
+          <div *ngIf="!element.tripId" class="offer cursor  offer--price cursor order--button"
+            (click)="cancelOrder(element)">
+            Cancel
+          </div>
+          <div *ngIf="element.tripId" class="flex flex--row table_custom-info">
+            Assigned to trip #{{ element.tripId }}
+          </div>
+        </div>
+
+        <div class="flex flex--column order--row-second cursor" *ngIf="path === pathOrdersTab.PAST_DUE">
+          <div class="flex flex--row table_custom-colomn">
+            Due date
+          </div>
+          <div class="flex flex--row orders table_custom-info">
+            {{ element.invoiceDueDate }}
+          </div>
+        </div>
+
+        <div class="flex flex--column order--row-second order--assigned"
+          *ngIf="[pathOrdersTab.ASSIGNED, pathOrdersTab.DECLINED].includes(path)  && element.status !== orderStatuses.CANCELED">
+          <div class="flex flex--row flex__justify-content--space-between order--assigned-button">
+            <div><span class="table_custom-colomn"> Trip ID:</span>
+              <span class="table_custom-info">#{{ element.tripId }}</span></div>
+            <div>
+              <button mat-icon-button (click)="addTrip(element)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="flex flex--row flex__justify-content--space-between order--assigned-button">
+            <div>
+              <span class="table_custom-colomn"> Driver: </span>
+              <span class="table_custom-info">{{ element.driver }}</span></div>
+            <div>
+              <button mat-icon-button (click)="createTrip(element)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="flex flex--row order--assigned-button">
+            <span class="table_custom-colomn"> Dispatcher: </span>
+            <span class="table_custom-info">{{ element.dispatcher }}</span>
+          </div>
+          <div class="offer cursor  offer--price cursor order--button" (click)="cancelOrder(element)">
+            Cancel
+          </div>
+        </div>
+
+        <div class="flex flex--column order--row-second flex__align-items--center"
+          *ngIf="element.status === orderStatuses.CANCELED">
+          <button class="login__form--button order--canceled-button" mat-icon-button color="primary"
+            (click)="checkDelete(element)">
+            <mat-icon class="text__color--red">delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <mat-paginator [length]="countOrders" [pageSize]="limit" [pageSizeOptions]="pageLimit" (page)="changePage($event)">
+  </mat-paginator>
+</div>

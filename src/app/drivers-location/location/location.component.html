@@ -1,0 +1,8 @@
+<div class="flex flex--row flex--box driver">
+  <mat-slide-toggle class="driver_toggle" [checked]="streetsMap" color="primary" (toggleChange)="toggleChange()">
+    <span [ngStyle]="{'color': streetsMap ? '#000000' : '#ffffff'}">{{ streetsMap ? 'Streets' : 'Satellite' }}</span>
+  </mat-slide-toggle>
+  <div id="map" class="block flex--box" leaflet [(leafletLayers)]="layers" [(leafletCenter)]="options.center"
+    [(leafletZoom)]="options.zoom" (leafletMapReady)="onMapReady($event)">
+  </div>
+</div>

@@ -1,0 +1,19 @@
+.mat-column-select {
+  overflow: initial;
+}
+
+.mat-column-fullName,
+.mat-column-role,
+.mat-column-blocked {
+  width: 31% !important;
+}
+
+.mat-column-select {
+  width: 6% !important;
+}
+
+.user--driver {
+  font-size: 12px;
+  margin-left: 5px;
+  color: #777777;
+}

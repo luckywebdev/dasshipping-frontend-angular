@@ -1,0 +1,194 @@
+<div class="flex flex--row flex--box" *ngIf="quote">
+  <div class="block flex flex--column flex--box">
+    <div class="flex flex__justify-content--space-between">
+      <h3 class="block--h3"> General Information</h3>
+      <button class="login__form--button" mat-raised-button color="primary" disabled="true"
+        (click)="save('information')">
+        Save
+      </button>
+    </div>
+
+    <div class="flex flex--column flex--box block--body">
+      <form [formGroup]="information" class="flex flex--row flex--box flex--wrap">
+        <div class="flex flex--column flex--box column--first">
+          <mat-form-field>
+            <input type="text" formControlName="qouteId" matInput placeholder="Qoute Id" readonly>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column flex--box">
+          <mat-form-field>
+            <input type="text" formControlName="status" matInput placeholder="Status" readonly>
+          </mat-form-field>
+        </div>
+      </form>
+      <div class="flex flex--row flex__justify-content--space-between flex__align-items--center">
+        <div class="price">
+          <span>
+            Initial Price: <span class="price-value">{{roundPrice(quote.initialPrice)}}$</span>
+          </span>
+          <span>
+            Cost Per mile: <span class="price-value">{{roundPerMile(quote.initialPrice / quote.distance)}}$</span>
+          </span>
+        </div>
+        <div class="price">
+          <span>
+            Price With Discount: <span class="price-value">{{roundPrice(quote.priceWithDiscount)}}$</span>
+          </span>
+          <span>
+            Cost Per mile: <span class="price-value">{{roundPerMile(quote.priceWithDiscount / quote.distance)}}$</span>
+          </span>
+        </div>
+        <button class="login__form--button" mat-raised-button color="primary" (click)="newDiscount()">Offer
+          discount</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex flex--row flex--wrap">
+  <div class="block flex flex--column flex--box">
+    <div class="flex flex__justify-content--space-between">
+      <h3 class="block--h3"> Pickup Information</h3>
+      <button class="login__form--button" mat-raised-button color="primary" disabled="true"
+        (click)="save('pickLocation')">Save</button>
+    </div>
+    <form [formGroup]="pickLocation" class="flex flex--row block--body">
+      <div class="flex flex--column flex--box column--first">
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="address" matInput placeholder="Street" readonly>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="city" matInput placeholder="City" readonly>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="state" matInput placeholder="State" readonly>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="flex flex--column flex--box">
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="zipCode" matInput placeholder="Zip" readonly>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="addressType" matInput placeholder="Address Type" readonly>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <textarea #reason formControlName="instructions" maxLength="120" placeholder="Instruction" matInput
+              readonly></textarea>
+            <mat-hint align="end">{{reason.value.length}} / 120</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="block flex flex--column flex--box">
+    <div class="flex flex__justify-content--space-between">
+      <h3 class="block--h3"> Delivery Information</h3>
+      <button class="login__form--button" mat-raised-button color="primary" disabled="true"
+        (click)="save('deliveryLocation')">Save</button>
+    </div>
+
+    <form [formGroup]="deliveryLocation" class="flex flex--row block--body">
+      <div class="flex flex--column flex--box column--first">
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="address" matInput placeholder="Street" readonly>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="city" matInput placeholder="City" readonly>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="state" matInput placeholder="State" readonly>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="flex flex--column flex--box">
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="zipCode" matInput placeholder="Zip" readonly>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="addressType" matInput placeholder="Address Type" readonly>
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <textarea #reason formControlName="instructions" maxLength="120" placeholder="Instruction" matInput
+              readonly></textarea>
+            <mat-hint align="end">{{reason.value.length}} / 120</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="flex flex--row flex--box" *ngIf="quote">
+  <div class="block flex--column flex--box">
+    <h3 class="block--h3">Vehicles</h3>
+    <div class="flex flex--column flex--box">
+      <div class="flex flex--row flex--box" *ngFor="let car of quote.cars; let i = index">
+        <div class="flex flex--column flex--box">
+          <div class="flex flex--row">
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.vin" type="text" matInput maxlength="17" placeholder="VIN number" readonly />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.year" type="text" matInput placeholder="Year" readonly />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.make" type="text" matInput placeholder="Make" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="flex flex--row">
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.model" type="text" matInput placeholder="Model" readonly />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.type" type="text" matInput placeholder="Type" readonly />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--row flex--box cars--input">
+              <div class="flex flex--row flex__align-items--center cars--status">
+                <span textSize="13" textColor="black-87">{{car.inop ? "Inoperable" : "Operable"}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="flex flex--row flex--box map">
+  <mat-slide-toggle class="map_toggle" [checked]="streetsMap" color="primary" (toggleChange)="toggleChange()">
+    <span [ngStyle]="{'color': streetsMap ? '#000000' : '#ffffff'}">{{ streetsMap ? 'Streets' : 'Satellite' }}</span>
+  </mat-slide-toggle>
+  <div id="map" class="block flex--box" leaflet [leafletOptions]="options" [(leafletLayers)]="layers"
+    [(leafletCenter)]="options.center" [(leafletZoom)]="options.zoom" (leafletMapReady)="onMapReady($event)">
+  </div>
+</div>

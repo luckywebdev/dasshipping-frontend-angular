@@ -1,0 +1,27 @@
+.register {
+  height: 100%;
+
+  &__form {
+    padding: 15px;
+
+    &--checkbox {
+      margin-bottom: 20px;
+    }
+
+    &--button {
+      margin-bottom: 10px;
+    }
+    
+    &--icon {
+      margin-right: 5px;
+    }
+
+    &--description {
+      margin-bottom: 10px;
+    }
+  }
+
+  &--content {
+    width: 400px;
+  }
+}

@@ -1,0 +1,65 @@
+<div class="flex flex__align-items--center flex--column">
+  <div class="flex flex__align-items--center flex--column planner">
+    <mat-slide-toggle class="planner_toggle" [checked]="streetsMap" color="primary" (toggleChange)="toggleChange()">
+      <span [ngStyle]="{'color': '#000000' }">{{ streetsMap ? 'Streets' : 'Satellite' }}</span>
+    </mat-slide-toggle>
+    <div id="map" leaflet leafletDraw [leafletLayers]="layers" [leafletCenter]="center" [leafletZoom]="zoom"
+      (leafletMapReady)="onMapReady($event)">
+    </div>
+    <div class="flex flex--column planner--calculate">
+      <div class="flex flex--column planner--block">
+        <span class=" planner--margin-top">Trip calculator</span>
+        <div class="flex flex--row flex__justify-content--space-between planner--margin-bottom">
+          <ng-select placeholder="Trip name" [virtualScroll]="true" [(ngModel)]="selectedTrip"
+            (scrollToEnd)="getListTrips()" class="trip-custom" (change)="selectTrip()">
+            <ng-option *ngFor="let trip of trips" [value]="trip.id">{{trip.name}}</ng-option>
+          </ng-select>
+        </div>
+        <div class="flex flex--row flex__justify-content--space-between planner--item" style="margin-top: 25px;">
+          <span>On board:</span>
+          <span class="planner--item-second">{{carsLength}} cars</span>
+        </div>
+        <div class="flex flex--row flex__justify-content--space-between planner--item">
+          <span>Distance:</span>
+          <span class="planner--item-second">{{resultCalculate?.distance}} Miles</span>
+        </div>
+        <div class="flex flex--row flex__justify-content--space-between planner--item">
+          <span>Total Cost:</span>
+          <span class="planner--item-second">${{resultCalculate?.price}}</span>
+        </div>
+        <div class="flex flex--row flex__justify-content--space-between planner--item">
+          <span>Cost per Mile:</span>
+          <span class="planner--item-second">{{resultCalculate?.costPerMile}} $/mile</span>
+        </div>
+      </div>
+      <div class="flex flex--column flex__justify-content--space-between planner--block planner--second">
+        <div class="flex flex--column">
+          <div class="flex flex--row flex__justify-content--space-between planner--item">
+            <span class="planner--button">Adresses</span>
+            <span class="planner--button cursor" (click)="optimiseRoute()">Recalculate</span>
+          </div>
+          <div cdkDropList (cdkDropListDropped)="drop($event)">
+            <div class="flex flex--row flex__justify-content--space-between flex__align-items--center planner--item"
+              *ngFor="let location of locations; let i = index"
+              [ngClass]="[location?.type ? ' planner--pick' : ' planner--delivery' , location?.visible ? ' planner--visible' : ' planner--partial']"
+              cdkDrag>
+              <div class="flex flex--row">
+                <i class="material-icons">
+                  control_camera
+                </i>
+                <span>{{location?.type ? 'P.' : 'D.'}} order #{{location?.orderId}}</span>
+              </div>
+              <mat-checkbox [(ngModel)]="location.visible" (change)="changeVisible(location)"></mat-checkbox>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex--row flex__justify-content--space-between flex__align-items--center planner--item">
+          <span class="planner--button cursor" (click)="optimiseRoute(true)">Optimise</span>
+          <button (click)="checkTrip()" class="login__form--button" mat-raised-button color="primary">
+            {{ data && data.tripDetails ? 'Save' : (selectedTrip ? 'Add to Trip' : 'Create trip')}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

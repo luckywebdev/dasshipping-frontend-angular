@@ -1,0 +1,15 @@
+<div class="flex flex__align-items--center flex--column">
+  <h3 textWeight="bold" textColor="black-two">File name</h3>
+
+  <form [formGroup]="dataForm" class="forgot-password__form flex flex--row flex--box">
+    <mat-form-field>
+      <input type="text" placeholder="File name" matInput formControlName="name">
+    </mat-form-field>
+  </form>
+
+  <div md-dialog-actions class="actions flex">
+    <button class="actions--button flex--box" mat-raised-button color="warn" (click)="dialogRef.close()">Cancel</button>
+    <button [disabled]="!dataForm.valid" (click)="sendNewAttachment()" class="actions--button flex--box"
+      mat-raised-button color="primary">Upload</button>
+  </div>
+</div>

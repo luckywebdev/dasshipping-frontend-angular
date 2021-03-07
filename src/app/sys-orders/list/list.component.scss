@@ -1,0 +1,65 @@
+@import 'src/styles/colors.scss';
+
+.mat-column-startDate,
+.mat-column-age {
+  min-width: 75px;
+}
+
+.mat-column-id {
+  padding-left: 0 !important;
+}
+
+.number {
+  &--vechicle {
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    width           : 25px;
+    height          : 25px;
+    border-radius   : 50%;
+    color           : $white;
+    background-color: $dodger-blue;
+    margin-right    : 5px;
+  }
+}
+
+.actors {
+  margin: 5px 0;
+
+  &--avatar {
+    height       : 30px;
+    width        : 30px;
+    min-width    : 30px;
+    border-radius: 15px;
+    margin-right : 10px;
+  }
+
+  &--no-avatar {
+    background-color: $dark-500;
+  }
+}
+
+.late_date {
+  color: red;
+}
+
+.payment_status {
+  color           : #ffffff;
+  border-color    : red;
+  background-color: red;
+}
+
+.order {
+  padding-bottom: 10px;
+
+  &--canceled {
+
+    &-text {
+      color: red;
+    }
+
+    &-button {
+      border: none;
+    }
+  }
+}

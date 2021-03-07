@@ -1,0 +1,140 @@
+<div class="mat-elevation-z8">
+  <div class="filter">
+    <form [formGroup]="filter">
+      <div class="flex flex--row flex--wrap">
+        <div class="flex flex--column flex--box filter--input">
+          <ng-select placeholder="All drivers" [virtualScroll]="true" formControlName="driverId"
+            (scrollToEnd)="getListDrivers()" (change)="applyFilter()">
+            <ng-option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.firstName }} {{ driver.lastName }}
+            </ng-option>
+          </ng-select>
+        </div>
+
+        <div class="flex flex--column flex--box filter--input" *ngIf="getPermission()">
+          <ng-select placeholder="All dispatchers" [virtualScroll]="true" formControlName="dispatcherId"
+            (scrollToEnd)="getListDispatchers()" (change)="applyFilter()">
+            <ng-option *ngFor="let dispatcher of dispatchers" [value]="dispatcher.id">{{ dispatcher.firstName }}
+              {{ dispatcher.lastName }}</ng-option>
+          </ng-select>
+        </div>
+
+        <div class="flex flex--column flex--box filter--input">
+          <ng-select placeholder="Sort by" formControlName="orderByField" (change)="applyFilter()">
+            <ng-option *ngFor="let sortBy of orderBy" [value]="sortBy.value">{{
+              sortBy.label
+            }}</ng-option>
+          </ng-select>
+        </div>
+
+        <div class="flex flex--column flex--box filter--input">
+          <mat-form-field class="filter--input">
+            <input type="text" formControlName="searchText" matInput placeholder="Search"
+              (input)="search($event.target.value)" />
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="order">
+    <div class="order__import">
+      <input accept="application/pdf" (change)="importOrder($event.target.files[0])" id="import" type="file"
+        placeholder="Import Order" hidden #fileInput />
+      <label class="block--click flex flex--column flex--center" for="import">
+        Import
+      </label>
+    </div>
+    <button mat-button (click)="infoImport()">
+      <mat-icon textSize="22" textColor="dodger-blue">info</mat-icon>
+    </button>
+    <button mat-button class="order__new" (click)="newOrder()">
+      <mat-icon textSize="22" textColor="white">add</mat-icon>
+    </button>
+  </div>
+  <div class="separator"></div>
+  <mat-tab-group [selectedIndex]="selectedTab" mat-align-tabs="start">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">NEWS LOADS</span>
+        <span class="counts">{{ counts.publish }}</span>
+      </ng-template>
+      <app-list-load [path]="pathOrdersTab.NEW_LOADS" (changeCount)="changeCount($event, 'publish')"
+        [filter]="filterSubject.asObservable()">
+      </app-list-load>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">ASSIGNED</span>
+        <span class="counts">{{ counts.assigned }}</span>
+      </ng-template>
+      <app-list-orders [path]="pathOrdersTab.ASSIGNED" (changeCount)="changeCount($event, pathOrdersTab.ASSIGNED)"
+        [filter]="filterSubject.asObservable()">
+      </app-list-orders>
+      <!-- <app-list-load [path]="pathOrdersTab.ASSIGNED" (changeCount)="changeCount($event, pathOrdersTab.ASSIGNED)"
+        [filter]="filterSubject.asObservable()">
+      </app-list-load> -->
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">DECLINED</span>
+        <span class="counts">{{ counts.declined }}</span>
+      </ng-template>
+      <app-list-orders [path]="pathOrdersTab.DECLINED" (changeCount)="changeCount($event, pathOrdersTab.DECLINED)"
+        [filter]="filterSubject.asObservable()">
+      </app-list-orders>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">PICKED UP</span>
+        <span class="counts">{{ counts.picked_up }}</span>
+      </ng-template>
+      <app-list-orders [path]="pathOrdersTab.PICKED_UP" (changeCount)="changeCount($event, 'picked_up')"
+        [filter]="filterSubject.asObservable()">
+      </app-list-orders>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">DELIVERED</span>
+        <span class="counts">{{ counts.delivered }}</span>
+      </ng-template>
+      <app-list-orders [path]="pathOrdersTab.DELIVERED" (changeCount)="changeCount($event, pathOrdersTab.DELIVERED)"
+        [filter]="filterSubject.asObservable()">
+      </app-list-orders>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">CLAIMED</span>
+        <span class="counts">{{ counts.claimed }}</span>
+      </ng-template>
+      <app-list-orders [path]="pathOrdersTab.CLAIMED" (changeCount)="changeCount($event, pathOrdersTab.CLAIMED)"
+        [filter]="filterSubject.asObservable()">
+      </app-list-orders>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">BILLED</span>
+        <span class="counts">{{ counts.billed }}</span>
+      </ng-template>
+      <app-list-orders [path]="pathOrdersTab.BILLED" (changeCount)="changeCount($event, pathOrdersTab.BILLED)"
+        [filter]="filterSubject.asObservable()">
+      </app-list-orders>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">PAST DUE</span>
+        <span class="counts">{{ counts.past_due }}</span>
+      </ng-template>
+      <app-list-orders [path]="pathOrdersTab.PAST_DUE" (changeCount)="changeCount($event, 'past_due')"
+        [filter]="filterSubject.asObservable()">
+      </app-list-orders>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">PAID</span>
+        <span class="counts">{{ counts.paid }}</span>
+      </ng-template>
+      <app-list-orders [path]="pathOrdersTab.PAID" (changeCount)="changeCount($event, pathOrdersTab.PAID)"
+        [filter]="filterSubject.asObservable()">
+      </app-list-orders>
+    </mat-tab>
+  </mat-tab-group>
+</div>

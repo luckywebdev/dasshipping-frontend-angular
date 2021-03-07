@@ -1,0 +1,61 @@
+<div class="sidebar flex flex--column">
+
+  <!-- Header -->
+  <!-- Header -->
+
+  <!-- Nav list -->
+  <div *ngFor="let category of categories">
+    <div class="sidebar__category" *ngIf="!category.allow">
+      <!-- <span class="sidebar--title" textWeight="bold" textSize="13" textColor="brown-grey">{{category.name}}</span> -->
+      <mat-nav-list class="flex flex--box">
+
+        <div class="sidebar__item--outline" mat-list-item *ngFor="let route of category.routes"
+          [routerLink]="route.url">
+          <div (click)="toggleChildren(category)" class="sidebar__item block--click flex flex__align-items--center"
+            *ngIf="(!route.allow && route.isPrimary)">
+            <!-- Icon & name -->
+            <div class="flex flex--box flex__align-items--center">
+              <mat-icon *ngIf="router.url === route.url; else inactive" textSize="20" textColor="dodger-blue"
+                class="sidebar__item--icon">{{route.icon}}</mat-icon>
+              <ng-template #inactive>
+                <mat-icon textSize="20" textColor="very-light-pink" class="sidebar__item--icon">{{route.icon}}
+                </mat-icon>
+              </ng-template>
+              <span textSize="14" textWeight="500" textColor="black">{{ route.name }}</span>
+              <span *ngIf="route.notificationKey && user && user[route.notificationKey]"
+                class="notifications">{{user[route.notificationKey]}}</span>
+            </div>
+            <!-- Icon & name -->
+
+            <!-- Redirect icon -->
+            <mat-icon class="sidebar__item--arrow" *ngIf="!category.isOpen" textSize="12">arrow_forward_ios</mat-icon>
+            <mat-icon class="sidebar__item--arrow--opened" *ngIf="category.isOpen" textSize="12">arrow_forward_ios
+            </mat-icon>
+            <!-- Redirect icon -->
+          </div>
+        </div>
+
+        <!-- Childer Routes -->
+        <mat-nav-list class="flex flex--box" *ngIf="category.isOpen">
+          <div class="sidebar__item--outline" mat-list-item *ngFor="let route of category.routes"
+            [routerLink]="route.url">
+            <div class="sidebar__item sidebar__item--child block--click flex flex__align-items--center"
+              *ngIf="!route.isPrimary">
+              <!-- Icon & name -->
+              <div class="flex flex--box flex__align-items--center">
+                <span textSize="14" textWeight="500" textColor="black">{{ route.name }}</span>
+              </div>
+              <!-- Icon & name -->
+
+            </div>
+          </div>
+        </mat-nav-list>
+        <!-- Childer Routes -->
+
+      </mat-nav-list>
+    </div>
+  </div>
+  <!-- Nav list -->
+
+
+</div>

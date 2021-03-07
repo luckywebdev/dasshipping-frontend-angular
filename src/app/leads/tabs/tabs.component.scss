@@ -1,0 +1,58 @@
+@import "src/styles/colors.scss";
+
+/deep/ .mat-tab-label {
+  flex   : 1;
+  opacity: 1 !important;
+}
+
+mat-select {
+  height: 19px;
+}
+
+.planner {
+  min-width : 40px;
+  min-height: 40px;
+}
+
+.filter {
+  margin-bottom: 20px;
+
+  &--input {
+    margin: 0 5px;
+  }
+
+  &--block {
+    margin-right: 25px;
+  }
+
+  &--radius {
+    max-width   : 140px;
+    margin-right: 0;
+  }
+}
+
+.tabs {
+  &--title {
+    opacity: 0.6;
+  }
+}
+
+.counts {
+  margin-left     : 10px;
+  background-color: $dodger-blue;
+  color           : $white;
+  padding         : 5px;
+  border-radius   : 20px;
+  opacity         : 1;
+  min-width       : 20px;
+}
+
+.upload {
+  label {
+    height          : 35px;
+    min-width       : 100px;
+    background-color: #ccc;
+    border-radius   : 4px;
+    color           : $dodger-blue;
+  }
+}

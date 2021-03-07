@@ -1,0 +1,69 @@
+@import "src/styles/colors.scss";
+.mat-column-company,
+.mat-column-dispatcher,
+.mat-column-driver {
+  width: 28% !important;
+}
+
+.mat-column-status {
+  width: 16% !important;
+}
+
+.information {
+  &--header {
+    color: $brownish-grey;
+    font-weight: bold;
+  }
+  &--item {
+    color: $brownish-grey;
+    font-size: 13px;
+  }
+  &--distance * {
+    color: $dark-500;
+  }
+}
+
+.actors {
+  margin: 5px 0;
+  &--avatar {
+    height: 30px;
+    width: 30px;
+    min-width: 30px;
+    border-radius: 15px;
+    margin-right: 10px;
+  }
+  &--no-avatar {
+    background-color: $dark-500;
+  }
+  &--role {
+    font-size: 11px;
+    color: $dark-500;
+    font-style: italic;
+  }
+}
+
+.status {
+  border: 1px solid $dodger-blue;
+  color: $dodger-blue;
+  height: 20px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.filter {
+  margin-bottom: 10px;
+  &--block {
+    margin: 0 10px;
+  }
+  &--select {
+    mat-form-field {
+      margin-top: 5px;
+    }
+  }
+  &--input {
+    mat-form-field {
+      margin-top: 2px;
+    }
+  }
+}

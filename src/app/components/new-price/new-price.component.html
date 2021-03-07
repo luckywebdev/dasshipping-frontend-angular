@@ -1,0 +1,15 @@
+<div class="flex flex__align-items--center flex--column">
+  <h3 textWeight="bold" textColor="black-two">Proposal new discount</h3>
+
+  <form [formGroup]="dataForm" class="forgot-password__form flex flex--row flex--box">
+    <mat-form-field>
+      <input type="number" step="1" min="0" max="100" placeholder="Discount %" matInput formControlName="discount">
+    </mat-form-field>
+  </form>
+
+  <div md-dialog-actions class="actions flex">
+    <button class="actions--button flex--box" mat-raised-button color="warn" (click)="dialogRef.close()">Cancel</button>
+    <button [disabled]="!dataForm.valid" (click)="sendNewDiscount()" class="actions--button flex--box" mat-raised-button
+      color="primary">Send</button>
+  </div>
+</div>

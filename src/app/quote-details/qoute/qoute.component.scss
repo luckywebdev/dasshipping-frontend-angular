@@ -1,0 +1,54 @@
+@import 'src/styles/colors.scss';
+
+#map {
+  height: 500px;
+}
+
+.map {
+  position: relative;
+}
+
+.map_toggle {
+  position: absolute;
+  z-index : 1000;
+  top     : 5px;
+  left    : 5px;
+}
+
+.price {
+  font-size     : 16px;
+  display       : flex;
+  flex-direction: column;
+
+  &-value {
+    color: $brownish-grey;
+  }
+}
+
+.column {
+  &--first {
+    margin-right: 20px;
+  }
+}
+
+.cars {
+  &--input {
+    margin: 0 5px;
+  }
+
+  &--status {
+    padding-bottom: 5px;
+  }
+
+  &--actions {
+    min-width: 80px;
+
+    &-red {
+      color: $red;
+    }
+
+    &-blue {
+      color: $dodger-blue;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+<form [formGroup]="data" class="flex flex--column">
+  <span textSize="14" textWeight="bold" textColor="black-two" class="text--upper_case text--center">Invite
+    account</span>
+  <span textSize="12" textColor="dark-500" class="text--center">Lorem ipsum dolor sit amet.</span>
+
+  <mat-form-field>
+    <input formControlName="firstName" type="text" matInput placeholder="First Name">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input formControlName="lastName" type="text" matInput placeholder="Last Name">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input formControlName="email" type="email" matInput placeholder="Email">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Role</mat-label>
+    <mat-select formControlName="roleId" required>
+      <mat-option>--</mat-option>
+      <mat-option *ngFor="let item of roles" [value]="item">
+        {{rolesName[item]}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="flex flex__justify-content--center">
+    <button [disabled]="!data.valid" textWeight="bold" textSize="14" (click)="invite()" class="text--upper_case"
+      mat-raised-button color="primary">Invite</button>
+  </div>
+</form>

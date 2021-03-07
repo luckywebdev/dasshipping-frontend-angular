@@ -1,0 +1,19 @@
+<div class="flex flex__align-items--center flex--column">
+  <h1 textSize="14" textWeight="bold" textColor="black-two">
+    {{ data.textHeader }}
+  </h1>
+
+  <div class="flex flex--column flex--box send--invoice">
+    <ngx-extended-pdf-viewer [src]="data.link" useBrowserLocale="true" height="80vh"></ngx-extended-pdf-viewer>
+  </div>
+
+  <div md-dialog-actions class="actions flex">
+    <button class="actions--button flex--box" mat-raised-button color="warn" (click)="dialogRef.close()">
+      {{data.cancelButton || 'Cancel'}}
+    </button>
+    <button *ngIf="data.textButton" class="actions--button flex--box" mat-raised-button color="primary"
+      (click)="send()">
+      {{ data.textButton }}
+    </button>
+  </div>
+</div>

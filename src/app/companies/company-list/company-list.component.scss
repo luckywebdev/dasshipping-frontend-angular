@@ -1,0 +1,24 @@
+@import 'src/styles/colors.scss';
+
+.mat-column-officePhone {
+  width: 15% !important;
+}
+
+.mat-column-name,
+.mat-column-email,
+.mat-column-full_name,
+.mat-column-address {
+  width: 20% !important;
+}
+
+.mat-column-select {
+  width: 5% !important;
+}
+
+.requested {
+  button {
+    background-color: $dodger-blue;
+    color: $white;
+    margin: 5px 0;
+  }
+}

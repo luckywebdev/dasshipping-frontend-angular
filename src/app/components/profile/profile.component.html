@@ -1,0 +1,139 @@
+<div class="flex flex--row">
+  <div class="column_first flex">
+    <div class="flex flex--column flex--box">
+      <div class="flex">
+        <mat-card class="personal">
+          <mat-card-content class="user--avatar">
+            <div class="flex flex--row flex--center user--avatar" *ngIf="user">
+              <img *ngIf="avatar" [src]="avatar" alt="">
+              <button *ngIf="avatar" mat-icon-button (click)="removeAvatar()" class="delete">
+                <mat-icon class="text__color--red">delete</mat-icon>
+              </button>
+              <div *ngIf="!avatar" class="flex flex--column flex--center flex--box upload">
+                <input accept="image/*" (change)="uploadAvatar($event.target.files[0])" id="avatar" type="file"
+                  placeholder="Add Profile Photo" hidden>
+                <label class="block--click flex flex--column flex--center" for="avatar">
+                  <mat-icon class="text__color--brown-grey font__size--35">add_a_photo</mat-icon>
+                  <p>UPLOAD A PHOTO</p>
+                  <span class="text__color--brown-grey">Click here to upload a profile photo</span>
+                </label>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+    </div>
+  </div>
+  <div class="column_second flex">
+    <mat-card class="personal">
+      <form [formGroup]="data">
+        <mat-card-header>
+          <mat-card-title>Personal Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="flex flex--row flex--wrap">
+            <div class="flex flex--column flex--box">
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="firstName" matInput placeholder="First Name"
+                    [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="lastName" matInput placeholder="Last Name" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="birthdayUser" placeholder="Birthday" formControlName="birthday"
+                    [readonly]="readonly">
+                  <mat-datepicker-toggle matSuffix [for]="birthdayUser"></mat-datepicker-toggle>
+                  <mat-datepicker #birthdayUser [disabled]="readonly"></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="phoneNumber" matInput placeholder="Phone" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="email" matInput placeholder="Email" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column" *ngIf="id !== 'me'">
+                <mat-form-field>
+                  <mat-label>Gender</mat-label>
+                  <mat-select formControlName="genderId" [disabled]="readonly">
+                    <mat-option *ngFor="let gender of genders" [value]="gender.value">
+                      {{gender.label}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="flex flex--column flex--box">
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="companyName" matInput placeholder="Company Name"
+                    [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="address" matInput placeholder="Address"
+                    (ngModelChange)="addressValidator($event)" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="city" matInput placeholder="City"
+                    (ngModelChange)="addressValidator($event)" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="state" matInput placeholder="State"
+                    (ngModelChange)="addressValidator($event)" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="zip" matInput placeholder="Zip"
+                    (ngModelChange)="addressValidator($event)" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <mat-label>Languages</mat-label>
+                  <mat-select formControlName="languages" multiple [disabled]="readonly">
+                    <mat-option *ngFor="let language of languages" [value]="language.id">
+                      {{language.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+        </mat-card-content>
+        <mat-card-actions class="text--right">
+          <button *ngIf="readonly" (click)="editMode()" class="login__form--button" mat-icon-button color="primary">
+            <i class="material-icons">
+              lock
+            </i>
+          </button>
+          <button *ngIf="!readonly" [disabled]="!data.valid" (click)="save()" class="login__form--button"
+            mat-icon-button color="primary">
+            <i class="material-icons">
+              lock_open
+            </i>
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </div>
+</div>

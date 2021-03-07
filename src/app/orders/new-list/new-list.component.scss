@@ -1,0 +1,31 @@
+@import "src/styles/colors.scss";
+
+.mat-column-pick,
+.mat-column-delivery {
+  max-width: 160px !important;
+  width: 160px !important;
+}
+
+.mat-column-id {
+  padding-left: 0 !important;
+}
+
+.trip_class {
+  width: 90px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.order {
+  padding-bottom: 10px;
+
+  &--canceled {
+    &-text {
+      color: red;
+    }
+
+    &-button {
+      border: none;
+    }
+  }
+}

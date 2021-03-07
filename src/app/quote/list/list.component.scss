@@ -1,0 +1,28 @@
+@import 'src/styles/colors.scss';
+
+.mat-column-id {
+  padding-left: 0 !important;
+}
+
+.offer {
+  &--price {
+    padding: 5px;
+    color: $white;
+    height: 20px;
+    border-radius: 15px;
+    background-color: $dodger-blue;
+    margin: 5px 0;
+    text-align: center;
+  }
+
+  &--button {
+    color: $dodger-blue;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 15px;
+    background-color: transparent;
+    margin: 5px 0;
+    outline: none;
+    box-shadow: 1px 1.7px 8px 0 rgba(0, 0, 0, 0.4);
+  }
+}

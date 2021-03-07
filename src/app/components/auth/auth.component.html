@@ -1,0 +1,13 @@
+<div class="auth flex flex--box flex__justify-content--center flex__align-items--center">
+  <mat-card class="auth__form">
+    <!-- Tabs -->
+
+    <app-login *ngIf="selectedTab === 0; else registerTab" (changeTab)="changeTab($event)"></app-login>
+
+    <ng-template #registerTab>
+      <app-register-carrier (changeTab)="changeTab($event)"></app-register-carrier>
+    </ng-template>
+
+    <!-- Tabs -->
+  </mat-card>
+</div>

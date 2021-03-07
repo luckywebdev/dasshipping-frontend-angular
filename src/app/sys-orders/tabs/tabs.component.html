@@ -1,0 +1,68 @@
+<div class="mat-elevation-z8">
+  <mat-tab-group [selectedIndex]="selectedTab" mat-align-tabs="start">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">PUBLISHED</span>
+        <span class="counts">{{counts.published}}</span>
+      </ng-template>
+      <app-order-list (changeCount)="changeCount($event,orderTabs.PUBLISHED)" [status]="orderTabs.PUBLISHED">
+      </app-order-list>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">REQUESTED</span>
+        <span class="counts">{{counts.requested}}</span>
+      </ng-template>
+      <app-order-list (changeCount)="changeCount($event,orderTabs.REQUESTED)" [status]="orderTabs.REQUESTED">
+      </app-order-list>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">ASSIGNED</span>
+        <span class="counts">{{counts.assigned}}</span>
+      </ng-template>
+      <app-order-list (changeCount)="changeCount($event,orderTabs.ASSIGNED)" [status]="orderTabs.ASSIGNED">
+      </app-order-list>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">PICK UP</span>
+        <span class="counts">{{counts.picked_up}}</span>
+      </ng-template>
+      <app-order-list (changeCount)="changeCount($event,orderTabs.PICKED_UP)" [status]="orderTabs.PICKED_UP">
+      </app-order-list>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">DELIVERED</span>
+        <span class="counts">{{counts.delivered}}</span>
+      </ng-template>
+      <app-order-list (changeCount)="changeCount($event,orderTabs.DELIVERED)" [status]="orderTabs.DELIVERED">
+      </app-order-list>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">CLAIMED</span>
+        <span class="counts">{{counts.claimed}}</span>
+      </ng-template>
+      <app-order-list (changeCount)="changeCount($event,orderTabs.CLAIMED)" [status]="orderTabs.CLAIMED">
+      </app-order-list>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">DISPATCHED</span>
+        <span class="counts">{{counts.dispatched}}</span>
+      </ng-template>
+      <app-order-list (changeCount)="changeCount($event,orderTabs.DISPATCHED)" [status]="orderTabs.DISPATCHED">
+      </app-order-list>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">DECLINED/EXPIRED</span>
+        <span class="counts">{{counts.expired}}</span>
+      </ng-template>
+      <app-order-list (changeCount)="changeCount($event,orderTabs.EXPIRED)" [status]="orderTabs.EXPIRED">
+      </app-order-list>
+    </mat-tab>
+  </mat-tab-group>
+</div>

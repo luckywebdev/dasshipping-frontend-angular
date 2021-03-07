@@ -1,0 +1,481 @@
+<div class="flex flex--row">
+  <div class="column_first flex">
+    <div class="flex--column flex--box">
+      <div class="flex">
+        <mat-card class="personal">
+          <mat-card-content class="user--avatar">
+            <div class="flex flex--row flex--center user--avatar" *ngIf="user">
+              <img *ngIf="avatar" [src]="avatar" alt="">
+              <button *ngIf="avatar && checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN])"
+                mat-icon-button (click)="removeAvatar()" class="delete">
+                <mat-icon class="text__color--red">delete</mat-icon>
+              </button>
+              <div *ngIf="!avatar" class="flex flex--column flex--center flex--box upload">
+                <input *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN])" accept="image/*"
+                  (change)="uploadAvatar($event.target.files[0])" id="avatar" type="file"
+                  placeholder="Add Profile Photo" hidden>
+                <label *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN])"
+                  class="block--click flex flex--column flex--center" for="avatar">
+                  <mat-icon class="text__color--brown-grey font__size--35">add_a_photo</mat-icon>
+                  <p>UPLOAD A PHOTO</p>
+                  <span class="text__color--brown-grey">Click here to upload a profile photo</span>
+                </label>
+                <label *ngIf="!checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN])"
+                  class="block--click flex flex--column flex--center">
+                  <mat-icon class="text__color--brown-grey font__size--35">photo</mat-icon>
+                  <p>No avatar set</p>
+                </label>
+
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="column-margin flex" *ngIf="user && user.company && checkPermission([rolesStatuses.SUPER_ADMIN])">
+        <mat-card class="personal">
+          <mat-card-content>
+            <div class="flex flex--row flex__justify-content--space-between flex__align-items--center">
+              <div class="column-margin-title">
+                Company Details
+              </div>
+              <div class="flex flex--row column-margin-file">
+                <button class="login__form--button" mat-raised-button color="primary" (click)="viewCompany()">
+                  View
+                </button>
+              </div>
+            </div>
+            <div class="flex flex--column">
+              <div class="column-margin column-margin-row">
+                <span>Name:</span>
+                <span class="dispatcher">{{user.company.name}}</span>
+              </div>
+              <div class="column-margin column-margin-row">
+                <span>Address:</span>
+                <span class="dispatcher">{{user.company.address}}</span>
+              </div>
+              <div class="column-margin column-margin-row">
+                <span>City/State/Zip:</span>
+                <span class="dispatcher">{{user.company.city}}/{{user.company.state}}/{{user.company.zip}}</span>
+              </div>
+              <div class="column-margin column-margin-row">
+                <span>Email:</span>
+                <span class="dispatcher">{{user.company.email}}</span>
+              </div>
+              <div class="column-margin column-margin-row">
+                <span>DOT:</span>
+                <span class="dispatcher">{{user.company.dotNumber}}</span>
+              </div>
+              <div class="column-margin column-margin-row">
+                <span>Role:</span>
+                <span class="dispatcher">{{rolesStatus[user.roleId]}}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="column-margin flex"
+        *ngIf="getPermission(rolesStatuses.DRIVER) && user.dispatcher && checkPermission([rolesStatuses.SUPER_ADMIN,rolesStatuses.COMPANY_ADMIN])">
+        <mat-card class="personal">
+          <mat-card-content>
+            <div class="flex flex--row flex__justify-content--space-between flex__align-items--center">
+              <div class="column-margin-title">
+                Dispatcher
+              </div>
+            </div>
+            <div class="flex flex--column">
+              <div class="attachments flex flex--row flex__justify-content--space-between flex__align-items--center">
+                <div class="flex flex--row flex__align-items--center cursor" (click)="goToAccount(user.dispatcherId)">
+                  <img *ngIf="user.dispatcher.avatarUrl" [src]="user.dispatcher.avatarUrl"
+                    alt="{{user.dispatcher.firstName}}">
+                  <div *ngIf="!user.dispatcher.avatarUrl" class="avatarUrl"></div>
+                  <span class="attachments--name">{{user.dispatcher.firstName}} {{user.dispatcher.lastName}}</span>
+                </div>
+                <div class="flex flex--row flex__align-items--center">
+                  <button mat-icon-button (click)="unlinkDispetcher()"
+                    *ngIf="checkPermission([rolesStatuses.COMPANY_ADMIN])">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="column-margin flex flex--box" *ngIf="getPermission(rolesStatuses.DRIVER)">
+        <mat-card class="personal">
+          <mat-card-content>
+            <div class="flex flex--row flex__justify-content--space-between flex__align-items--center">
+              <div class="column-margin-title">
+                Attachments
+              </div>
+              <div class="flex flex--row column-margin-file">
+                <input *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN])" #document
+                  (change)="uploadAttachments($event.target.files[0])" id="attachments" type="file"
+                  placeholder="Add Attachement" hidden>
+                <label *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN])"
+                  class="flex flex--column flex--center" for="attachments">
+                  <p>Add</p>
+                </label>
+              </div>
+            </div>
+            <div class="flex flex--column">
+              <div class="attachments flex flex--row flex__justify-content--space-between flex__align-items--center"
+                *ngFor="let file of user.files">
+                <div class="flex flex--row flex__align-items--center">
+                  <i class="material-icons" textColor="brown-grey">
+                    attach_file
+                  </i>
+                  <span class="attachments--name">{{file.displayName}}</span>
+                </div>
+                <div class="flex flex--row flex__align-items--center">
+                  <button mat-icon-button (click)="downloadAttachment(file)">
+                    <mat-icon>file_copy</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="removeAttachment(file.id)"
+                    *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN])">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="column-margin flex flex--box"
+        *ngIf="(getPermission(rolesStatuses.DRIVER) || getPermission(rolesStatuses.CLIENT)) && user.signatureUrl">
+        <mat-card class="personal">
+          <mat-card-content>
+            <div class="flex flex--row flex__justify-content--space-between flex__align-items--center">
+              <div class="column-margin-title">
+                Signature
+              </div>
+            </div>
+            <div class="flex flex--column">
+              <img [src]="user.signatureUrl" class="signature" alt="Signature">
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="column-margin flex flex--box" *ngIf="getPermission(rolesStatuses.DISPATCHER)">
+        <mat-card class="personal">
+          <mat-card-content>
+            <div class="flex flex--row flex__justify-content--space-between flex__align-items--center">
+              <div class="column-margin-title">
+                Assigned Drivers
+              </div>
+              <div class="flex flex--row column-margin-file" *ngIf="checkPermission([rolesStatuses.COMPANY_ADMIN])">
+                <button class="login__form--button" mat-raised-button color="primary" (click)="addDriverToDispacher()">
+                  Assign
+                </button>
+              </div>
+            </div>
+            <div class="flex flex--column">
+              <div class="attachments flex flex--row flex__justify-content--space-between flex__align-items--center"
+                *ngFor="let driver of dispacerDrivers">
+                <div class="flex flex--row flex__align-items--center cursor" (click)=" goToAccount(driver.id)">
+                  <span *ngIf="!driver.avatarUrl" class="attachments--image"></span>
+                  <img *ngIf="driver.avatarUrl" [src]="driver.avatarUrl" [alt]="driver.firstName">
+                  <span class="attachments--name">{{driver.firstName}} {{driver.lastName}}</span>
+                </div>
+                <div class="flex flex--row flex__align-items--center"
+                  *ngIf="checkPermission([rolesStatuses.COMPANY_ADMIN])">
+                  <button mat-icon-button (click)="removeDriverToDispacher(driver.id)">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="flex flex--row flex__justify-content--center flex__align-items--center"
+                *ngIf="dispacerDriversCount > limit">
+                <button class="navigation" (click)="prevPage()" [disabled]="skip === 0">
+                  <i class="material-icons" textColor="dodger-blue">
+                    navigate_before
+                  </i>
+                </button>
+                <div class="navigation--page">{{page}}</div>
+                <button class="navigation" (click)="nextPage()" [disabled]="(skip + limit) > dispacerDriversCount">
+                  <i class="material-icons" textColor="dodger-blue">
+                    navigate_next
+                  </i>
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  <div class="column_second">
+    <mat-card>
+      <form [formGroup]="data">
+        <mat-card-header>
+          <mat-card-title>Personal Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="flex flex--row flex--wrap">
+            <div class="flex flex--column flex--box">
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="firstName" matInput placeholder="First Name"
+                    [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="lastName" matInput placeholder="Last Name" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="birthdayUser" placeholder="Birthday" formControlName="birthday"
+                    [readonly]="readonly">
+                  <mat-datepicker-toggle matSuffix [for]="birthdayUser"></mat-datepicker-toggle>
+                  <mat-datepicker #birthdayUser [disabled]="readonly"></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="phoneNumber" matInput placeholder="Phone" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="email" matInput placeholder="Email" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column" *ngIf="id !== 'me'">
+                <mat-form-field>
+                  <mat-label>Gender</mat-label>
+                  <mat-select formControlName="genderId" [disabled]="readonly">
+                    <mat-option *ngFor="let gender of genders" [value]="gender.value">
+                      {{gender.label}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column" *ngIf="permissionPayRate()">
+                <mat-form-field>
+                  <input type="number" formControlName="payRate" matInput placeholder="Pay rate" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="flex flex--column flex--box">
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="address" matInput placeholder="Address"
+                    (ngModelChange)="addressValidator($event)" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="city" matInput placeholder="City"
+                    (ngModelChange)="addressValidator($event)" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="state" matInput placeholder="State"
+                    (ngModelChange)="addressValidator($event)" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <input type="text" formControlName="zip" matInput placeholder="Zip"
+                    (ngModelChange)="addressValidator($event)" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column" *ngIf="user && user.roleId === rolesStatuses.DRIVER">
+                <mat-form-field>
+                  <input type="text" formControlName="dlNumber" matInput placeholder="DL number" [readonly]="readonly">
+                </mat-form-field>
+              </div>
+              <div class="column-item flex flex--column">
+                <mat-form-field>
+                  <mat-label>Languages</mat-label>
+                  <mat-select formControlName="languages" multiple [disabled]="readonly">
+                    <mat-option *ngFor="let language of languages" [value]="language.id">
+                      {{language.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+        </mat-card-content>
+        <mat-card-actions class="text--right">
+          <button *ngIf="checkSuspendAccount() && !user.blocked" (click)="suspendAccount()" class="login__form--button"
+            mat-raised-button color="primary">Suspend
+            account</button>
+          <button *ngIf="checkSuspendAccount() && user.blocked" (click)="activateAccount()" class="login__form--button"
+            mat-raised-button color="primary">Activate
+            account</button>
+          <button *ngIf="checkIsDriver()" (click)="kickOutAccount()" class="login__form--button" mat-raised-button
+            color="primary">Kick out</button>
+          <button *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN]) && readonly"
+            (click)="openEdit()" class="login__form--button" color="primary" mat-icon-button>
+            <i class="material-icons">
+              lock
+            </i>
+          </button>
+          <button *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN]) && !readonly"
+            (click)="save()" [disabled]="!data.valid" class="login__form--button" mat-icon-button color="primary">
+            <i class="material-icons">
+              lock_open
+            </i>
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+    <div class="flex flex--row" *ngIf="getPermission(rolesStatuses.DRIVER)">
+      <div class="flex flex--column flex--box mt-5 mr-5">
+        <mat-card>
+          <form [formGroup]="truck">
+            <mat-card-header>
+              <mat-card-title>Car Information</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="flex flex--row">
+                <div class="flex flex--column flex--box">
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <mat-label>Truck Type</mat-label>
+                      <mat-select formControlName="type" [disabled]="readonlyTruck">
+                        <mat-option *ngFor="let type of vehicleTypes" [value]="type.type">
+                          {{ type.type ? type.type : '--' }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <input type="text" formControlName="VINNumber" matInput placeholder="VIN Number"
+                        [readonly]="readonlyTruck">
+                    </mat-form-field>
+                  </div>
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <input type="number" formControlName="year" matInput placeholder="Year"
+                        [readonly]="readonlyTruck">
+                    </mat-form-field>
+                  </div>
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <input type="text" formControlName="make" matInput placeholder="Make" [readonly]="readonlyTruck">
+                    </mat-form-field>
+                  </div>
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <input type="text" formControlName="model" matInput placeholder="Model"
+                        [readonly]="readonlyTruck">
+                    </mat-form-field>
+                  </div>
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <input type="text" formControlName="fuelPerMile" matInput placeholder="Fuel per mile"
+                        [readonly]="readonlyTruck">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+            </mat-card-content>
+            <mat-card-actions class="text--right">
+              <button *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN]) && readonlyTruck"
+                (click)="openEditTruck()" class="login__form--button" mat-icon-button color="primary">
+                <i class="material-icons">
+                  lock
+                </i>
+              </button>
+              <button *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN]) && !readonlyTruck"
+                [disabled]="!truck.valid" (click)="verifyTruck()" class="login__form--button" mat-icon-button
+                color="primary">
+                <i class="material-icons">
+                  lock_open
+                </i>
+              </button>
+            </mat-card-actions>
+          </form>
+        </mat-card>
+      </div>
+      <div class="flex flex--column flex--box mt-5">
+        <mat-card>
+          <form [formGroup]="trailer">
+            <mat-card-header>
+              <mat-card-title>Trailer Information</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="flex flex--row">
+                <div class="flex flex--column flex--box">
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <mat-label>Trailer Type</mat-label>
+                      <mat-select formControlName="type" [disabled]="readonlyTrailer">
+                        <mat-option *ngFor="let type of trailerTypes" [value]="type.value">
+                          {{ type.label ? type.label : '--' }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <input type="text" formControlName="VINNumber" matInput placeholder="VIN Number"
+                        [readonly]="readonlyTrailer">
+                    </mat-form-field>
+                  </div>
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <input type="number" formControlName="year" matInput placeholder="Year"
+                        [readonly]="readonlyTrailer">
+                    </mat-form-field>
+                  </div>
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <input type="text" formControlName="make" matInput placeholder="Make"
+                        [readonly]="readonlyTrailer">
+                    </mat-form-field>
+                  </div>
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <input type="text" formControlName="model" matInput placeholder="Model"
+                        [readonly]="readonlyTrailer">
+                    </mat-form-field>
+                  </div>
+                  <div class="column-item flex flex--column">
+                    <mat-form-field>
+                      <input type="text" formControlName="capacity" matInput placeholder="Trailer Capacity"
+                        [readonly]="readonlyTrailer">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+            </mat-card-content>
+            <mat-card-actions class="text--right">
+              <button *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN]) && readonlyTrailer"
+                (click)="openEditTrailer()" class="login__form--button" mat-icon-button color="primary">
+                <i class="material-icons">
+                  lock
+                </i>
+              </button>
+              <button
+                *ngIf="checkPermission([rolesStatuses.DISPATCHER,rolesStatuses.COMPANY_ADMIN]) && !readonlyTrailer"
+                [disabled]="!truck.valid" (click)="verifyTrailer()" class="login__form--button" mat-icon-button
+                color="primary">
+                <i class="material-icons">
+                  lock_open
+                </i>
+              </button>
+            </mat-card-actions>
+          </form>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
+</div>

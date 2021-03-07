@@ -1,0 +1,18 @@
+<div class="flex flex__align-items--center flex--column">
+  <h3 textWeight="bold" textColor="black-two">Choose a dispatcher</h3>
+
+  <form [formGroup]="dataForm" class="forgot-password__form flex flex--column flex--box">
+    <mat-form-field>
+      <input formControlName="dispatcher" type="text" matInput placeholder="Dispatcher name">
+    </mat-form-field>
+    <mat-form-field>
+      <input formControlName="driver" type="text" matInput placeholder="Driver name" readonly>
+    </mat-form-field>
+  </form>
+
+  <div md-dialog-actions class="actions flex">
+    <button class="actions--button flex--box" mat-raised-button color="warn" (click)="dialogRef.close()">Cancel</button>
+    <button [disabled]="!dataForm.valid" (click)="assignDispatcher()" class="actions--button flex--box"
+      mat-raised-button color="primary">Assign</button>
+  </div>
+</div>

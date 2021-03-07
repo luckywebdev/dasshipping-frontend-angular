@@ -1,0 +1,39 @@
+<form [formGroup]="dataForm" class="forgot-password__form flex flex--column">
+  <span textSize="14" textWeight="bold" textColor="black-two" class="text--upper_case text--center">Invite
+    carrier</span>
+  <span textSize="12" textColor="dark-500" class="text--center">Lorem ipsum dolor sit amet.</span>
+
+  <span class="error-message" *ngIf="errorMessage && errorMessage.length">{{errorMessage}}</span>
+
+  <mat-form-field>
+    <input formControlName="name" type="text" matInput placeholder="Business Name" (ngModelChange)="closeError()">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input formControlName="msNumber" type="number" matInput placeholder="MS Number" (ngModelChange)="closeError()">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input formControlName="dotNumber" type="number" matInput placeholder="DOT Number" (ngModelChange)="closeError()">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input formControlName="contactPersonFirstName" type="text" matInput placeholder="First Name"
+      (ngModelChange)="closeError()">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input formControlName="contactPersonLastName" type="text" matInput placeholder="Last Name"
+      (ngModelChange)="closeError()">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input formControlName="email" type="email" matInput placeholder="Email" (ngModelChange)="closeError()">
+  </mat-form-field>
+
+
+  <div class="flex flex__justify-content--center">
+    <button [disabled]="!dataForm.valid" textWeight="bold" textSize="14" (click)="invite()" class="text--upper_case"
+      mat-raised-button color="primary">Invite</button>
+  </div>
+</form>

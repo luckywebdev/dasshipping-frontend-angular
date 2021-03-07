@@ -1,0 +1,66 @@
+image: docker:latest
+
+variables:
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  DOCKER_DRIVER: overlay2
+  HOST_STAGING: root@159.203.94.156
+  APP_DIR: /var/www/web
+
+  PROD_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+services:
+  - docker:dind
+
+stages:
+  - build
+  - deploy
+
+build_staging:
+  image: node:latest
+  stage: build
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  before_script:
+    - yarn install --production=false
+  script:
+    - yarn build:$CI_COMMIT_REF_NAME
+  artifacts:
+    expire_in: 1 day
+    name: "project-$CI_COMMIT_REF_NAME"
+    paths:
+      - dist/
+  only:
+    - staging
+
+deploy_staging:
+  image: alpine
+  stage: deploy
+  environment:
+    name: staging
+    url: http://159.203.94.156
+  only:
+    - staging
+  before_script:
+    - mkdir -p ~/.ssh
+    - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - apk --no-cache add openssh-client curl rsync
+    - echo "$STAGING_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+  script:
+    - rsync -ravO dist/ $HOST_STAGING:$APP_DIR/
+  after_script:
+    - rm -f ~/.ssh/id_rsa
+
+build-production:
+  stage: build
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker build --force-rm --no-cache --pull -t $PROD_IMAGE_TAG .
+    - docker push $PROD_IMAGE_TAG
+  only:
+    - production
+  tags:
+    - docker-private-runner

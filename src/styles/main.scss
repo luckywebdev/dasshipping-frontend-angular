@@ -1,0 +1,81 @@
+@import './colors.scss';
+
+body {
+  background-color: $galeria;
+  height: 100vh;
+}
+
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+
+@import '~@angular/material/theming';
+@include mat-core();
+
+$custom-primary: (50: $dodger-blue,
+100: $dodger-blue,
+200: $dodger-blue,
+300: $dodger-blue,
+400: $dodger-blue,
+500: $dodger-blue,
+600: $dodger-blue,
+700: $dodger-blue,
+800: $dodger-blue,
+900: $dodger-blue,
+A100: $dodger-blue,
+A200: $dodger-blue,
+A400: $dodger-blue,
+A700: $dodger-blue,
+contrast: (50: white,
+100: white,
+200: white,
+300: white,
+400: white,
+500: white,
+600: white,
+700: white,
+800: white,
+900: white,
+A100: white,
+A200: white,
+A400: white,
+A700: white,
+));
+
+$shipping-app-primary: mat-palette($custom-primary);
+$shipping-app-accent: mat-palette($mat-pink);
+$shipping-app-warn: mat-palette($mat-red);
+$shipping-app-theme: mat-light-theme($shipping-app-primary, $shipping-app-accent, $shipping-app-warn);
+
+.mat-form {
+  &-field {
+    &-infix {
+      font-size: 14px;
+    }
+  }
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-underline {
+  background-color: $very-light-pink !important;
+}
+
+.mat-elevation-z8 {
+  overflow: hidden;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.mat-raised-button {
+  min-width: 141px !important;
+  min-height: 34px;
+  box-shadow: 1px 1.7px 8px 0 $black-40;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+input.mat-input-element {
+  height: 20px;
+}
+
+@include angular-material-theme($shipping-app-theme);

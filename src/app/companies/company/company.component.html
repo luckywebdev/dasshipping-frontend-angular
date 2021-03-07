@@ -1,0 +1,156 @@
+<div class="flex flex--row">
+  <div class="column_first flex">
+    <div class="flex--column flex--box">
+      <div class="flex">
+        <mat-card class="personal">
+          <mat-card-content>
+            <div class="flex flex--row flex--center" *ngIf="company">
+              <div *ngIf="editable">
+                <img *ngIf="cover_photo" [src]="cover_photo" alt="">
+                <div *ngIf="!cover_photo" class="flex flex--column flex--center flex--box upload">
+                  <label class="block--click flex flex--column flex--center">
+                    <span class="text__color--brown-grey">No company photo</span>
+                  </label>
+                </div>
+              </div>
+              <div *ngIf="!editable" class="flex flex--column flex--center flex--box">
+                <img *ngIf="cover_photo" [src]="cover_photo" alt="">
+                <label *ngIf="!cover_photo">No company photo</label>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="column-margin flex flex--box" *ngIf="company">
+        <mat-card class="personal">
+          <mat-card-content>
+            <div class="flex flex--row flex__justify-content--space-between flex__align-items--center">
+              <div class="column-margin-title">
+                Permits
+              </div>
+            </div>
+            <div class="flex flex--column">
+              <div class="attachments flex flex--row flex__justify-content--space-between flex__align-items--center"
+                *ngFor="let file of company.files">
+                <div class="flex flex--row flex__align-items--center">
+                  <i class="material-icons" textColor="brown-grey">
+                    attach_file
+                  </i>
+                  <span class="attachments--name">{{file.displayName}}</span>
+                </div>
+                <div class="flex flex--row flex__align-items--center">
+                  <button mat-icon-button (click)="downloadAttachment(file)">
+                    <mat-icon>file_copy</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="column-margin flex flex--box" *ngIf="company">
+        <mat-card class="personal">
+          <mat-card-content>
+            <div class="flex flex--column">
+              <div class="data-other">
+                <span>Drivers count</span>
+                <span>{{company.driversCount}}</span>
+              </div>
+              <div class="data-other">
+                <span>Dispachers count</span>
+                <span>{{company.dispatchersCount}}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+    </div>
+  </div>
+  <div class="column_second" *ngIf="!editable && company">
+    <mat-card class="">
+      <mat-card-content>
+        <div class="flex flex--row">
+          <div class="flex flex--column flex--box">
+            <span textSize="14" textWeight="bold" textColor="black-two">Contact Details</span>
+            <div class="column-item flex flex--column">
+              <label>{{company.name}}</label>
+              <label class="text__color--brown-grey font__size--12">Name</label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>Company Address</label>
+              <label class="text__color--brown-grey font__size--12">{{company.address}}/ {{company.city}}/
+                {{company.state}}/ {{company.zip}}</label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>Company Contact Name</label>
+              <label class="text__color--brown-grey font__size--12">{{company.contactPersonFirstName}}
+                {{company.contactPersonLastName}}</label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>Phone</label>
+              <label class="font__size--12">
+                <a class="text__color--brown-grey" href="tel:{{company.officePhone}}">
+                  {{company.officePhone}}
+                </a>
+              </label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>Email</label>
+              <label class="font__size--12">
+                <a class="text__color--brown-grey" href="mailto:{{company.email}}" target="_blank">
+                  {{company.email}}
+                </a>
+              </label>
+            </div>
+          </div>
+          <div class="flex flex--column flex--box">
+            <span textSize="14" textWeight="bold" textColor="black-two">Company Details</span>
+            <div class="column-item flex flex--column">
+              <label>{{company.dotNumber}}</label>
+              <label class="text__color--brown-grey font__size--12">DOT Number</label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>{{company.msNumber}}</label>
+              <label class="text__color--brown-grey font__size--12">MS Number</label>
+            </div>
+            <div class="column-item flex flex--column">
+              <label>
+                <a class="flex--box register__form--file font__size--12 text__color--brown-grey"
+                  *ngIf="company.insuranceUrl" [href]="company.insuranceUrl" target="_blank">Insurance Url</a></label>
+              Insurance
+            </div>
+            <div class="column-item flex flex--column">
+              <label>
+                <a class="flex--box register__form--file font__size--12 text__color--brown-grey"
+                  *ngIf="company.mcCertificateUrl" [href]="company.mcCertificateUrl" target="_blank">Mc Certificate
+                  Url</a>
+              </label>
+              MC Certificate
+            </div>
+            <div class="column-item flex flex--column">
+              <label>
+                {{company.blocked ? "Block": "Active"}}
+              </label>
+              <label class="text__color--brown-grey font__size--12">Status</label>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions class="text--right">
+        <div class="requested" *ngIf="company.status === companyStatuses.REQUESTED">
+          <button mat-raised-button (click)="checkApprove()">Approve</button>
+          <button mat-raised-button (click)="requestChanges()">Requested changes</button>
+        </div>
+        <button (click)="suspendCompany()" class="login__form--button" mat-raised-button color="secondary"
+          *ngIf="!company.blocked">Suspend
+          account</button>
+        <button (click)="activateCompany()" class="login__form--button" mat-raised-button color="secondary"
+          *ngIf="company.blocked">Activate
+          account</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

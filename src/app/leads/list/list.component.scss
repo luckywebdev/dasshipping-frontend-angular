@@ -1,0 +1,64 @@
+@import 'src/styles/colors.scss';
+
+.mat-column-startDate {
+  min-width: 75px;
+}
+
+.mat-column-age {
+  min-width: 50px;
+}
+
+.mat-column-action {
+  min-width: 120px;
+}
+
+.table--group {
+  background-color: $polar;
+
+  td {
+    border: none;
+  }
+}
+
+.offer {
+  &-disabled {
+    color : $brown-grey;
+    border: 1px solid $brown-grey;
+  }
+
+  &--button {
+    color        : $white;
+    cursor       : pointer;
+    border-radius: 4px;
+    margin       : 5px 0;
+    outline      : none;
+    box-shadow   : 1px 1.7px 8px 0 rgba(0, 0, 0, 0.4);
+
+    &-active {
+      background-color: $dodger-blue;
+    }
+
+    &-disabled {
+      background-color: $brown-grey;
+    }
+
+    &-title {
+      font-size: 12px;
+    }
+
+    &-label {
+      font-size: 9px;
+    }
+  }
+}
+
+.color {
+  &--brune {
+    color: $dark-500;
+  }
+
+  &--blue {
+    color     : $dodger-blue;
+    font-style: italic;
+  }
+}

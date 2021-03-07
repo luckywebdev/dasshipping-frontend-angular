@@ -1,0 +1,432 @@
+<div class="flex flex--row flex--wrap">
+  <div class="block flex flex--column flex--box">
+    <div class="flex flex--row flex__justify-content--space-between">
+      <div class="flex flex--row">
+        <form [formGroup]="data" class="flex flex--row block--body column">
+          <mat-form-field>
+            <mat-label>Trailer Type</mat-label>
+            <mat-select formControlName="trailerType">
+              <mat-option *ngFor="let type of trailerTypes" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="flex flex--column flex--box column--first"></div>
+        </form>
+      </div>
+      <div class="flex flex--row">
+        <button class="login__form--button" mat-raised-button color="primary" (click)="save()" [disabled]="
+            isValid() ||
+            !pickLocation.valid ||
+            !deliveryLocation.valid ||
+            !data.valid
+          ">
+          Save
+        </button>
+        <button class="login__form--button button_right" mat-raised-button color="primary" (click)="cancel()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="flex flex--row flex--wrap">
+  <div class="block flex flex--column flex--box">
+    <div class="flex flex__justify-content--space-between">
+      <h3 class="block--h3">Pickup Information</h3>
+    </div>
+
+    <form [formGroup]="pickLocation" class="flex flex--row block--body column">
+      <div class="flex flex--column flex--box column--first">
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input [matAutocomplete]="originLocation" autocomplete="offdisable" type="text" formControlName="address"
+              matInput placeholder="Street" (ngModelChange)="addressValidator('pickLocation')" (keyup)="
+                location$.next({
+                  value: $event.target.value,
+                  key: 'pickLocation'
+                })
+              " />
+          </mat-form-field>
+          <mat-autocomplete #originLocation="matAutocomplete" (optionSelected)="setAddress('pickLocation')">
+            <mat-option *ngFor="let option of locations" [value]="option">
+              {{ option.address }}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input [matAutocomplete]="pickLocationCity" autocomplete="offdisable" type="text" formControlName="city"
+              matInput placeholder="City" (ngModelChange)="addressValidator('pickLocation')" (keyup)="
+                locationCity$.next({
+                  value: $event.target.value,
+                  key: 'pickLocation'
+                })
+              " />
+          </mat-form-field>
+          <mat-autocomplete #pickLocationCity="matAutocomplete">
+            <mat-option *ngFor="let option of cityOptions" [value]="option">{{
+              option
+            }}</mat-option>
+          </mat-autocomplete>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input [matAutocomplete]="pickLocationState" autocomplete="offdisable" type="text" formControlName="state"
+              matInput placeholder="State" (ngModelChange)="addressValidator('pickLocation')" (keyup)="
+                locationState$.next({
+                  value: $event.target.value,
+                  key: 'pickLocation'
+                })
+              " />
+          </mat-form-field>
+          <mat-autocomplete #pickLocationState="matAutocomplete">
+            <mat-option *ngFor="let option of statesOptions" [value]="option">{{
+              option
+            }}</mat-option>
+          </mat-autocomplete>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="zipCode" matInput placeholder="Zip"
+              (ngModelChange)="addressValidator('pickLocation')" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <mat-label>Address Type</mat-label>
+            <mat-select formControlName="addressType">
+              <mat-option *ngFor="let type of locationType" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="flex flex--column flex--box">
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="name" matInput placeholder="Contact Full Name" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="phone" matInput placeholder="Contact Phone" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="email" formControlName="email" matInput placeholder="Contact Email" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <textarea #reason formControlName="instructions" maxLength="200" placeholder="Instruction" matInput
+              rows="5"></textarea>
+            <mat-hint align="end">{{ reason.value.length }} / 200</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- Delviery info -->
+  <div class="block flex flex--column flex--box">
+    <div class="flex flex__justify-content--space-between">
+      <h3 class="block--h3">Delivery Information</h3>
+    </div>
+
+    <form [formGroup]="deliveryLocation" class="flex flex--row block--body">
+      <div class="flex flex--column flex--box column--first">
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input [matAutocomplete]="destinationLocation" autocomplete="offdisable" type="text"
+              formControlName="address" matInput placeholder="Street"
+              (ngModelChange)="addressValidator('deliveryLocation')" (keyup)="
+                location$.next({
+                  value: $event.target.value,
+                  key: 'deliveryLocation'
+                })
+              " />
+          </mat-form-field>
+          <mat-autocomplete #destinationLocation="matAutocomplete" (optionSelected)="setAddress('deliveryLocation')">
+            <mat-option *ngFor="let option of locations" [value]="option">
+              {{ option.address }}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input [matAutocomplete]="deliveryLocationCity" autocomplete="offdisable" type="text" formControlName="city"
+              matInput placeholder="City" (ngModelChange)="addressValidator('deliveryLocation')" (keyup)="
+                locationCity$.next({
+                  value: $event.target.value,
+                  key: 'deliveryLocation'
+                })
+              " />
+          </mat-form-field>
+          <mat-autocomplete #deliveryLocationCity="matAutocomplete">
+            <mat-option *ngFor="let option of cityOptions" [value]="option">{{
+              option
+            }}</mat-option>
+          </mat-autocomplete>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input [matAutocomplete]="deliveryLocationState" autocomplete="offdisable" type="text"
+              formControlName="state" matInput placeholder="State"
+              (ngModelChange)="addressValidator('deliveryLocation')" (keyup)="
+                locationState$.next({
+                  value: $event.target.value,
+                  key: 'deliveryLocation'
+                })
+              " />
+          </mat-form-field>
+          <mat-autocomplete #deliveryLocationState="matAutocomplete">
+            <mat-option *ngFor="let option of statesOptions" [value]="option">{{
+              option
+            }}</mat-option>
+          </mat-autocomplete>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="zipCode" matInput placeholder="Zip"
+              (ngModelChange)="addressValidator('deliveryLocation')" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <mat-label>Address Type</mat-label>
+            <mat-select formControlName="addressType">
+              <mat-option *ngFor="let type of locationType" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="flex flex--column flex--box">
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="name" matInput placeholder="Contact Full Name" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="text" formControlName="phone" matInput placeholder="Contact Phone" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <input type="email" formControlName="email" matInput placeholder="Contact Email" />
+          </mat-form-field>
+        </div>
+        <div class="flex flex--column">
+          <mat-form-field>
+            <textarea #reason formControlName="instructions" maxLength="200" placeholder="Instruction" matInput
+              rows="5"></textarea>
+            <mat-hint align="end">{{ reason.value.length }} / 200</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!--Delivery Info-->
+
+  <!-- Shipper info -->
+  <div class="block flex flex--column flex--box">
+    <div class="flex flex__justify-content--space-between">
+      <h3 class="block--h3">Shipper Information</h3>
+    </div>
+
+    <form [formGroup]="shipperInformation" class="flex flex--column block--body">
+      <div class="flex flex--row">
+        <div class="flex flex--column flex--box column--first">
+          <!-- Address -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input [matAutocomplete]="shipperLocation" autocomplete="offdisable" type="text" formControlName="address"
+                matInput placeholder="Address" (ngModelChange)="addressValidator('shipperInformation')" (keyup)="
+                  location$.next({
+                    value: $event.target.value,
+                    key: 'shipperInformation'
+                  })
+                " />
+            </mat-form-field>
+            <mat-autocomplete #shipperLocation="matAutocomplete" (optionSelected)="setAddress('shipperInformation')">
+              <mat-option *ngFor="let option of locations" [value]="option">
+                {{ option.address }}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+          <!-- Address -->
+
+          <!-- City -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input [matAutocomplete]="shipperInformationCity" autocomplete="offdisable" type="text"
+                formControlName="city" matInput placeholder="City"
+                (ngModelChange)="addressValidator('shipperInformation')" (keyup)="
+                  locationCity$.next({
+                    value: $event.target.value,
+                    key: 'shipperInformation'
+                  })
+                " />
+            </mat-form-field>
+            <mat-autocomplete #shipperInformationCity="matAutocomplete">
+              <mat-option *ngFor="let option of cityOptions" [value]="option">{{
+                option
+              }}</mat-option>
+            </mat-autocomplete>
+          </div>
+          <!-- City -->
+
+          <!-- State -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input [matAutocomplete]="shipperInformationState" autocomplete="offdisable" type="text"
+                formControlName="state" matInput placeholder="State"
+                (ngModelChange)="addressValidator('shipperInformation')" (keyup)="
+                  locationState$.next({
+                    value: $event.target.value,
+                    key: 'shipperInformation'
+                  })
+                " />
+            </mat-form-field>
+            <mat-autocomplete #shipperInformationState="matAutocomplete">
+              <mat-option *ngFor="let option of statesOptions" [value]="option">{{ option }}</mat-option>
+            </mat-autocomplete>
+          </div>
+          <!-- State -->
+
+          <!-- ZIP Code -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="zipCode" matInput placeholder="Zip code"
+                (ngModelChange)="addressValidator('deliveryLocation')" />
+            </mat-form-field>
+          </div>
+          <!-- ZIP Code -->
+        </div>
+
+        <div class="flex flex--column flex--box">
+          <!-- Company name -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="companyName" matInput placeholder="Company name" />
+            </mat-form-field>
+          </div>
+          <!-- Company name -->
+
+          <!-- Contact name -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="fullName" matInput placeholder="Contact name" />
+            </mat-form-field>
+          </div>
+          <!-- Contact name -->
+
+          <!-- Contact Phone -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="phone" matInput placeholder="Contact phone" />
+            </mat-form-field>
+          </div>
+          <!-- Contact Phone -->
+
+          <!-- Contact email -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="email" formControlName="email" matInput placeholder="Contact email" />
+            </mat-form-field>
+          </div>
+          <!-- Contact email -->
+        </div>
+      </div>
+
+      <div class="flex flex--row flex--box">
+        <mat-form-field class="flex flex--row flex--box cars--input">
+          <input type="email" formControlName="billingEmail" matInput placeholder="Billing email" />
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+  <!-- Shipper info -->
+</div>
+
+<div class="flex flex--row flex--box">
+  <div class="block flex--column flex--box">
+    <div class="flex flex__justify-content--space-between">
+      <h3>Vehicles</h3>
+      <button *ngIf="!cars.length" class="cars--actions cars--actions-blue" mat-icon-button (click)="addCar()">
+        <i class="material-icons" textSize="18" textColor="dodger-blue">
+          add_circle_outline
+        </i>
+        Add car
+      </button>
+    </div>
+    <div class="flex flex--column flex--box cars">
+      <div class="flex flex--row flex--box" *ngFor="let car of cars; let i = index">
+        <div class="flex flex--column flex--box">
+          <div class="flex flex--row">
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.vin" type="text" matInput maxlength="17" placeholder="VIN number"
+                  (ngModelChange)="changeByVin(i)" />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.year" type="text" matInput placeholder="Year" />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.make" type="text" matInput placeholder="Make" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="flex flex--row">
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.model" type="text" matInput placeholder="Model" />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field class="cars--select">
+                <input type="text" [(ngModel)]="car.type" matInput placeholder="Type" />
+                <!-- <mat-label>Type</mat-label>
+                <mat-select [(ngModel)]="car.type">
+                  <mat-option *ngFor="let type of vehicleTypes" [value]="type.type">
+                    {{ type.type ? type.type : "--" }}
+                  </mat-option>
+                </mat-select> -->
+              </mat-form-field>
+            </div>
+            <div class="flex flex--row flex--box cars--input">
+              <div class="flex flex--row flex__align-items--center">
+                <mat-checkbox color="primary" [(ngModel)]="car.inop" class="register__form--checkbox" ngDefaultControl>
+                  <span textSize="13" textColor="brownish-grey">{{
+                    car.inop ? "Inoperable" : "Operable"
+                  }}</span>
+                </mat-checkbox>
+                <button class="cars--actions cars--actions-red" mat-icon-button (click)="removeCar(i)">
+                  <i class="material-icons" textSize="18" textColor="red">
+                    delete_forever
+                  </i>
+                  Remove
+                </button>
+                <button *ngIf="i + 1 === cars.length" class="cars--actions cars--actions-blue" mat-icon-button
+                  (click)="addCar()">
+                  <i class="material-icons" textSize="18" textColor="dodger-blue">
+                    add_circle_outline
+                  </i>
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

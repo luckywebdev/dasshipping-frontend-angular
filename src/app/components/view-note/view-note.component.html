@@ -1,0 +1,8 @@
+<div class="flex flex__align-items--center flex--column">
+  <h3 textWeight="bold" textColor="black-two">Driver declined the order</h3>
+
+  <div>{{data?.note}}</div>
+  <div md-dialog-actions class="actions text--right">
+    <button class="actions--button flex--box" mat-raised-button color="warn" (click)="dialogRef.close()">Close</button>
+  </div>
+</div>

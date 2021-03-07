@@ -1,0 +1,110 @@
+<div class="mat-elevation-z8">
+  <div class="loading--spinner" *ngIf="loading">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>
+        <span></span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }">
+        <div class="trip_class" *ngIf="element.tripId">Trip: #{{element.tripId}}</div>
+        <div class="flex flex--column flex__align-items--center price-carrier">
+          <span class="price-carrier--item"> Price: {{element.price}}$</span>
+          <span class="price-carrier--item-second"
+            [ngClass]="{ 'order--canceled-text': element.originalStatus === orderStatuses.CANCELED }">{{element.uuid}}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="pick">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Origin</span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }"
+        [innerHtml]="element.pick"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="distance">
+      <th mat-header-cell *matHeaderCellDef>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }">
+        <div class="flex flex--column flex__align-items--center">
+          <span> {{element.distance}}mi</span>
+          <span class="arrow--right"></span>
+          <span>{{element.trailerType}}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delivery">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Destination </span>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goOrder(element)" [ngClass]="{ highlight: element.existNotify }"
+        [innerHtml]="element.delivery"> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cargo">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Cargo</span>
+      </th>
+      <td mat-cell *matCellDef="let element" [innerHtml]="element.cargo" (click)="goOrder(element)"
+        [ngClass]="{ highlight: element.existNotify }"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="shipper">
+      <th mat-header-cell *matHeaderCellDef>
+        <span>Shipper</span>
+      </th>
+      <td mat-cell *matCellDef="let element" [innerHtml]="element.shipper" (click)="goOrder(element)"
+        [ngClass]="{ highlight: element.existNotify }"></td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>
+        <span></span>
+      </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{ highlight: element.existNotify }">
+        <div class="flex flex--column">
+          <div class="flex flex--row flex__justify-content--space-between flex__align-items--center"
+            *ngIf="element.driver">
+            <div>
+              <span class="table_custom-info" [innerHtml]="element.driver"></span>
+            </div>
+            <div
+              *ngIf="[pathOrdersTab.ASSIGNED, pathOrdersTab.DECLINED].includes(path)  && element.status !== orderStatuses.CANCELED">
+              <button mat-icon-button (click)="createTrip(element)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="flex flex--row flex__justify-content--space-between flex__align-items--center">
+            <div *ngIf="element.dispatcher">
+              <span class="table_custom-info" [innerHtml]="element.dispatcher"></span>
+            </div>
+            <div
+              *ngIf="[pathOrdersTab.ASSIGNED, pathOrdersTab.DELIVERED, pathOrdersTab.PICKED_UP].includes(path)  && element.status !== orderStatuses.CANCELED">
+              <button mat-icon-button (click)="goGeolocation(element)">
+                <mat-icon>person_pin_circle</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="flex flex--column order--row-second flex__align-items--center"
+            *ngIf="element.status === orderStatuses.CANCELED">
+            <button class="login__form--button order--canceled-button" mat-icon-button color="primary"
+              (click)="checkDelete(element)">
+              <mat-icon class="text__color--red">delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [length]="countOrders" [pageSize]="limit" [pageSizeOptions]="pageLimit" (page)="changePage($event)">
+  </mat-paginator>
+</div>

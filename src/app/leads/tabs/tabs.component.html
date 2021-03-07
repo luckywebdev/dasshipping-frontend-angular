@@ -1,0 +1,185 @@
+<div class="mat-elevation-z8 filter">
+  <form [formGroup]="filter">
+    <mat-card>
+      <mat-card-content>
+        <div class="flex flex--row flex--wrap">
+          <div class="flex flex--column flex--box filter--block">
+            <div class="flex flex--row">
+              <div class="flex flex--column filter--input flex--box">
+                <mat-form-field>
+                  <input
+                    type="text"
+                    formControlName="origin"
+                    matInput
+                    placeholder="Origin"
+                    [matAutocomplete]="originLocation"
+                    (keyup)="
+                      location$.next({
+                        value: $event.target.value,
+                        key: 'originLocation'
+                      })
+                    "
+                  />
+                </mat-form-field>
+
+                <mat-autocomplete
+                  #originLocation="matAutocomplete"
+                  (optionSelected)="setFilter('origin')"
+                >
+                  <mat-option *ngFor="let option of locations" [value]="option">
+                    {{ option.city }} {{ option.state }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+              <div class="flex flex--column filter--input filter--radius">
+                <mat-form-field>
+                  <input
+                    type="number"
+                    formControlName="originRadius"
+                    matInput
+                    placeholder="Search radius (miles)"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex--column flex--box filter--block">
+            <div class="flex flex--row">
+              <div class="flex flex--column filter--input flex--box">
+                <mat-form-field>
+                  <input
+                    type="text"
+                    formControlName="destination"
+                    matInput
+                    placeholder="Destination"
+                    [matAutocomplete]="destinationLocation"
+                    (keyup)="
+                      location$.next({
+                        value: $event.target.value,
+                        key: 'destinationLocation'
+                      })
+                    "
+                  />
+                </mat-form-field>
+
+                <mat-autocomplete
+                  #destinationLocation="matAutocomplete"
+                  (optionSelected)="setFilter('destination')"
+                >
+                  <mat-option *ngFor="let option of locations" [value]="option">
+                    {{ option.city }} {{ option.state }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+              <div class="flex flex--column filter--input filter--radius">
+                <mat-form-field>
+                  <input
+                    type="number"
+                    formControlName="destinationRadius"
+                    matInput
+                    placeholder="Search radius (miles)"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex--row flex--wrap">
+          <div class="flex flex--column flex--box filter--input filter--block">
+            <mat-form-field>
+              <mat-label>Trailer Type</mat-label>
+              <mat-select formControlName="trailerType">
+                <mat-option
+                  *ngFor="let type of trailerTypes"
+                  [value]="type.value"
+                >
+                  {{ type.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column flex--box filter--input filter--block">
+            <mat-form-field>
+              <input
+                type="number"
+                formControlName="minimumNumberOfVehiclesPerLoad"
+                matInput
+                placeholder="Maximum number of vehicles"
+              />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column flex--box filter--input">
+            <mat-form-field>
+              <mat-label>Vehicle Type</mat-label>
+              <mat-select formControlName="carType">
+                <mat-option
+                  *ngFor="let type of vehicleTypes"
+                  [value]="type.type"
+                >
+                  {{ type.type ? type.type : '--' }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="flex flex__justify-content--space-between">
+          <div class="flex flex--column upload">
+            <input
+              accept="text/csv"
+              (change)="importCsv($event.target.files[0])"
+              id="import"
+              type="file"
+              placeholder="Add Leads"
+              hidden
+              #fileInput
+            />
+            <label
+              class="block--click flex flex--column flex--center"
+              for="import"
+            >
+              <p>Import</p>
+            </label>
+          </div>
+          <button
+            (click)="search()"
+            class="login__form--button"
+            mat-raised-button
+            color="primary"
+          >
+            Search
+          </button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>
+
+<div class="mat-elevation-z8">
+  <mat-tab-group [selectedIndex]="selectedTab" mat-align-tabs="start">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">NEWS LEADS</span>
+        <span class="counts">{{ counts.news }}</span>
+      </ng-template>
+      <app-leads-list
+        (changeCount)="changeCount($event, leadTabs.NEWS)"
+        [status]="leadTabs.NEWS"
+        [filter]="filterSubject.asObservable()"
+      >
+      </app-leads-list>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tabs--title">QUOTED</span>
+        <span class="counts">{{ counts.quoted }}</span>
+      </ng-template>
+      <app-leads-list
+        (changeCount)="changeCount($event, leadTabs.QUOTED)"
+        [status]="leadTabs.QUOTED"
+        [filter]="filterSubject.asObservable()"
+      ></app-leads-list>
+    </mat-tab>
+  </mat-tab-group>
+</div>

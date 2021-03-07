@@ -1,0 +1,73 @@
+@import 'src/styles/colors.scss';
+
+.accept {
+  &--button {
+    color: $white;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 15px;
+    background-color: $dodger-blue;
+    margin: 5px 0;
+    outline: none;
+    max-width: 120px;
+    box-shadow: 1px 1.7px 8px 0 rgba(0, 0, 0, 0.4);
+  }
+}
+
+.offer--status {
+  max-width: 120px;
+}
+
+.order {
+  &--date {
+    border-bottom: 1px solid $dark-500;
+    padding-bottom: 10px;
+  }
+
+  &--created {
+    font-size: 11px;
+  }
+
+  &--margin {
+    &-top {
+      margin-top: 15px;
+    }
+
+    &-left {
+      margin-left: 10px;
+    }
+  }
+
+  &--origin {
+    position: relative;
+  }
+
+  &--icon {
+    font-size: 16px;
+  }
+}
+
+.company {
+  margin: 10px 0;
+
+  &--info {
+    margin-left: 5px;
+  }
+
+  &--avatar {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 25px;
+  }
+}
+
+.order--origin::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 7px;
+  width: 1px;
+  height: 18px;
+  border-left: 2px dashed $dark-500;
+}

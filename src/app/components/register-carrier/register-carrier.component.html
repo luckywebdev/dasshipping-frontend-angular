@@ -1,0 +1,172 @@
+<form [formGroup]="data" class="register flex flex--column">
+  <div class="register__logo flex flex--row flex__align-items--center flex__justify-content--center">
+    <img src="assets/image/logo.png" alt="Logo" />
+  </div>
+
+  <span textColor="black-three" textSize="14" class="font__weight--bold register--title">
+    {{ invite ? "Register" : "Requested changes" }}
+  </span>
+  <span textColor="brown-grey" textSize="13" class="register--subtitle" *ngIf="invite">Create a new account</span>
+
+  <mat-form-field>
+    <input formControlName="name" type="text" matInput placeholder="Business Name"
+      (ngModelChange)="formValidator('name')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.name" class="register--error">
+    Business Name is required.
+  </div>
+
+  <mat-form-field>
+    <input formControlName="address" type="text" matInput placeholder="Address"
+      (ngModelChange)="addressValidator($event,'address')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.address" class="register--error">
+    Address is required.
+  </div>
+
+  <mat-form-field>
+    <input [matAutocomplete]="auto" autocomplete="offdisable" formControlName="state" type="text" matInput
+      placeholder="State" (ngModelChange)="addressValidator($event,'state')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.state" class="register--error">
+    State is required.
+  </div>
+
+  <mat-form-field>
+    <input formControlName="city" type="text" matInput placeholder="City"
+      (ngModelChange)="addressValidator($event,'city')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.city" class="register--error">
+    City is required.
+  </div>
+
+  <mat-form-field>
+    <input formControlName="zip" type="text" matInput placeholder="Zip"
+      (ngModelChange)="addressValidator($event,'zip')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.zip" class="register--error">
+    Zip is required.
+  </div>
+
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">{{ option }}</mat-option>
+  </mat-autocomplete>
+
+  <mat-form-field>
+    <input formControlName="officePhone" type="tel" matInput placeholder="Office Phone"
+      (ngModelChange)="formValidator('officePhone')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.officePhone" class="register--error">
+    Office Phone is required.
+  </div>
+
+  <mat-form-field>
+    <input formControlName="email" type="email" matInput placeholder="Email" (ngModelChange)="formValidator('email')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.email" class="register--error">
+    Email is required.
+  </div>
+
+  <mat-form-field>
+    <input formControlName="dotNumber" type="number" matInput placeholder="DOT Number"
+      (ngModelChange)="formValidator('dotNumber')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.dotNumber" class="register--error">
+    DOT Number is required.
+  </div>
+
+  <mat-form-field>
+    <input formControlName="msNumber" type="number" matInput placeholder="MS Number"
+      (ngModelChange)="formValidator('msNumber')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.msNumber" class="register--error">
+    MS Number is required.
+  </div>
+
+  <mat-form-field>
+    <input formControlName="contactPersonPhone" type="tel" matInput placeholder="Contact Person Phone(not required)" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <input formControlName="contactPersonFirstName" type="text" matInput placeholder="Contact Person First Name"
+      (ngModelChange)="formValidator('contactPersonFirstName')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.contactPersonFirstName" class="register--error">
+    Contact Person First Name is required.
+  </div>
+
+  <mat-form-field>
+    <input formControlName="contactPersonLastName" type="text" matInput placeholder="Contact Person Last Name"
+      (ngModelChange)="formValidator('contactPersonLastName')" />
+  </mat-form-field>
+
+  <div *ngIf="errors && errors.contactPersonLastName" class="register--error">
+    Contact Person Last Name is required.
+  </div>
+
+  <div class="register__form--file-picker flex flex--row flex__align-items--center">
+    <mat-icon>note_add</mat-icon>
+    <span textSize="13" textColor="brownish-grey"
+      class="flex--box register__form--file">{{ mcCertificate ? mcCertificate.url : "Add Mc Certificate" }}</span>
+    <input #mcCertificateDoc accept="image/jpeg,application/pdf" (change)="selectMcCertificate($event.target.files[0])"
+      id="mcCertificate" type="file" placeholder="Add Mc Certificate" hidden />
+    <label textSize="16" textColor="dodger-blue" class="block--click" for="mcCertificate">BROWSE</label>
+  </div>
+
+  <div *ngIf="errors && errors.mcCertificate" class="register--errors">
+    Mc Certificate is required.
+  </div>
+
+  <div class="register__form--file-picker flex flex--row flex__align-items--center">
+    <mat-icon>security</mat-icon>
+    <span textSize="13" textColor="brownish-grey"
+      class="flex--box register__form--file">{{ insurance ? insurance.url : "Add Insurance" }}</span>
+    <input #insuranceDoc accept="image/jpeg,application/pdf" (change)="selectInsurance($event.target.files[0])"
+      id="insurance" type="file" placeholder="Add Mc Certificate" hidden />
+    <label textSize="16" textColor="dodger-blue" class="block--click" for="insurance">BROWSE</label>
+  </div>
+
+  <div *ngIf="errors && errors.insurance" class="register--errors">
+    Insurance is required.
+  </div>
+
+  <div class="additional">
+    <div class="additional-info">
+      Add Additional Insured:
+    </div>
+    <div class="additional-info">
+      Yota Shipping Inc 10450 Turkey Lake Rd
+    </div>
+    <div class="additional-info">
+      Orlando FL 32836 (901)-3087493
+    </div>
+  </div>
+
+  <mat-checkbox color="primary" [required]="true" formControlName="terms" class="register__form--checkbox"
+    (ngModelChange)="formValidator('terms')" ngDefaultControl>
+    <span textSize="13" textColor="brownish-grey" (click)="openTermService()">Agree with terms of service</span>
+  </mat-checkbox>
+
+  <div *ngIf="errors && errors.terms" class="register--error">
+    Terms is required.
+  </div>
+
+  <button (click)="checkRegister()" class="register__form--button text--upper_case" mat-raised-button color="primary">
+    Next
+  </button>
+
+  <p textSize="13" class="text--center">
+    Already Registered?
+    <span textSize="14" textColor="dodger-blue" class="block--click" (click)="login()">LOG IN</span>
+  </p>
+</form>

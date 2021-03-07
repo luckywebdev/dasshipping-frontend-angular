@@ -1,0 +1,36 @@
+<div class="register-finish flex flex--box flex__justify-content--center flex__align-items--center">
+  <mat-card class="register-finish--content">
+    <form [formGroup]="data" class="register-finish__form flex flex--column">
+      <span class="register-finish--title text--upper_case text--center">Registration step 2</span>
+      <span class="register-finish--description text--center text__color--dark-500">Current account status pending
+        activation.
+        <br>
+        You will get an email when your account will be activated.
+        <br>
+      </span>
+
+      <mat-form-field>
+        <input formControlName="password" type="password" matInput placeholder="New Password"
+          (ngModelChange)="formValidator()">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input [errorStateMatcher]="matcher" formControlName="confirmPassword" type="password" matInput
+          placeholder="Confirm Password" (ngModelChange)="formValidator()">
+      </mat-form-field>
+
+      <div *ngIf="validPassword" class="register-finish--error">
+        Not valid password or they are not the same.
+      </div>
+
+      <button (click)="submit()" class="login__form--button text--upper_case" mat-raised-button
+        color="primary">Finish</button>
+
+      <div class="register-finish__form--description flex flex--row flex__align-items--center">
+        <mat-icon class="register-finish__form--icon">error_outline</mat-icon>
+        <span class="font__size--12">Make sure you display 12+ characters, caps, number, sign</span>
+      </div>
+
+    </form>
+  </mat-card>
+</div>

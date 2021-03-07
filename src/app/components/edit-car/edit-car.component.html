@@ -1,0 +1,71 @@
+<div class="flex flex__align-items--center flex--column">
+  <h3 textWeight="bold" textColor="black-two">Car info</h3>
+
+  <form
+    [formGroup]="dataForm"
+    class="forgot-password__form flex flex--column flex--box"
+  >
+    <mat-form-field>
+      <input
+        formControlName="label"
+        type="text"
+        matInput
+        placeholder="Display"
+      />
+    </mat-form-field>
+
+    <div class="flex flex--row">
+      <mat-form-field class="margin">
+        <input formControlName="year" type="text" matInput placeholder="Year" />
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="make" type="text" matInput placeholder="Make" />
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex--row">
+      <mat-form-field class="margin">
+        <input
+          formControlName="model"
+          type="text"
+          matInput
+          placeholder="Model"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type" class="margin--bottom">
+          <mat-option *ngFor="let type of vehicleTypes" [value]="type.type">
+            {{ type.type ? type.type : '--' }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex--row">
+      <mat-slide-toggle formControlName="inop" color="primary">
+        {{ getInop() ? 'Inoperable' : 'Operable' }}
+      </mat-slide-toggle>
+    </div>
+  </form>
+
+  <div md-dialog-actions class="actions flex">
+    <button
+      class="actions--button flex--box"
+      mat-raised-button
+      color="warn"
+      (click)="dialogRef.close()"
+    >
+      Cancel
+    </button>
+    <button
+      [disabled]="!dataForm.valid"
+      (click)="editCar()"
+      class="actions--button flex--box"
+      mat-raised-button
+      color="primary"
+    >
+      Save
+    </button>
+  </div>
+</div>

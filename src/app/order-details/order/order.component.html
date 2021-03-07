@@ -1,0 +1,639 @@
+<div class="flex flex--row flex--wrap">
+  <div class="flex flex--column flex--box1" *ngIf="order">
+    <div class="block flex flex--column">
+      <div class="flex flex--row">
+        <div class="flex flex--column flex--box column--first block--body">
+          <form [formGroup]="information">
+            <div class="flex flex--column">
+              <mat-form-field>
+                <input type="text" formControlName="orderUUID" matInput placeholder="Order UUID" readonly />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column">
+              <mat-form-field>
+                <input type="text" formControlName="status" matInput placeholder="Status" readonly />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column" *ngIf="order && order.dispatchInstructions">
+              <mat-form-field>
+                <textarea type="text" formControlName="dispatchInstructions" matInput
+                  placeholder="Dispatch Instructions" readonly rows="5"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="flex flex--row" *ngIf="order && order.source !== 'internal'">
+              <div class="flex flex--column flex--box">
+                <mat-form-field>
+                  <input type="text" formControlName="externalId" matInput placeholder="External Id"
+                    [readonly]="!permissionWrite() || permissionEdit() || readonly.information" />
+                </mat-form-field>
+              </div>
+              <div *ngIf="permissionWrite() && !permissionEdit()" class="flex flex--column">
+                <button *ngIf="readonly.information" (click)="modeEdit('information')" class="login__form--button"
+                  mat-icon-button color="primary">
+                  <i class="material-icons">
+                    lock
+                  </i>
+                </button>
+                <button *ngIf="!readonly.information" (click)="save()" class="login__form--button" mat-icon-button
+                  color="primary">
+                  <i class="material-icons">
+                    lock_open
+                  </i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="flex flex--column flex--box actions">
+          <button class="login__form--button" mat-raised-button color="primary" (click)="checkArchive()">
+            Archive
+          </button>
+          <button class="login__form--button" mat-raised-button color="primary" (click)="sendRetrieveDispatch()"
+            *ngIf="isRetrieveDispatch()">
+            Retrieve Dispatch from Carrier {{invite && invite.company && invite.company.name}}
+          </button>
+          <button class="login__form--button" mat-raised-button color="primary" (click)="sendDispatchSheet()"
+            *ngIf="isDispatchSheet()">
+            Dispatch Sheet
+          </button>
+          <button class="login__form--button" mat-raised-button color="primary" (click)="openSelectPaid()"
+            [disabled]="order.status !== orderStatuses.BILLED">
+            Mark as paid
+          </button>
+          <div *ngIf="selectPaymentMethod" class="payment-select">
+            <mat-select [(ngModel)]="paymentMethod" placeholder="Payment Method" (selectionChange)="checkPaid()">
+              <mat-option *ngFor="let method of methods" [value]="method">
+                {{method}}
+              </mat-option>
+            </mat-select>
+          </div>
+          <div class="flex flex--row">
+            <button class="login__form--button flex--box margin--right-10" mat-raised-button color="primary"
+              (click)="checkReceipt()" *ngIf="order && order.status === orderStatuses.PAID">
+              Send receipt
+            </button>
+            <button class="login__form--button" mat-raised-button color="secondary" (click)="previewReceipt()"
+              *ngIf="order && order.status === orderStatuses.PAID">
+              Preview
+            </button>
+          </div>
+          <div class="flex flex--row">
+            <button class="login__form--button flex--box margin--right-10" mat-raised-button color="primary"
+              (click)="checkInvoice()" *ngIf="permissionSendInvoice()">
+              Send invoice
+            </button>
+            <button class="login__form--button" mat-raised-button color="secondary" (click)="previewInvoice()"
+              *ngIf="permissionSendInvoice()">
+              Preview
+            </button>
+          </div>
+          <div class="flex flex--row">
+            <button *ngIf="permissionSendBol()" class="login__form--button flex--box margin--right-10" mat-raised-button
+              color="primary" (click)="checkBol()">
+              Send BOL
+            </button>
+            <button class="login__form--button" mat-raised-button color="secondary" (click)="previewBOL()"
+              *ngIf="permissionSendBol()">
+              Preview
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="block flex flex--column flex--box">
+      <div class="flex flex__justify-content--space-between">
+        <h3 class="block--h3">Pickup Information</h3>
+        <div *ngIf="permissionWrite() && !permissionEdit()">
+          <button *ngIf="readonly.pickup" (click)="modeEdit('pickup')" class="login__form--button" mat-icon-button
+            color="primary">
+            <i class="material-icons">
+              lock
+            </i>
+          </button>
+          <button *ngIf="!readonly.pickup" (click)="save()" class="login__form--button" mat-icon-button color="primary">
+            <i class="material-icons">
+              lock_open
+            </i>
+          </button>
+        </div>
+      </div>
+
+      <form [formGroup]="pickLocation" class="flex flex--row block--body">
+        <div class="flex flex--column flex--box column--first">
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="address" matInput placeholder="Street"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.pickup" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="city" matInput placeholder="City"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.pickup" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="state" matInput placeholder="State"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.pickup" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="zipCode" matInput placeholder="Zip"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.pickup" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="addressType" matInput placeholder="Address Type"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.pickup" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="flex flex--column flex--box">
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="name" matInput placeholder="Contact Name"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.pickup" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="phone" matInput placeholder="Contact Phone"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.pickup" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="email" formControlName="email" matInput placeholder="Contact Email"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.pickup" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <textarea #reason formControlName="instructions" maxLength="120" placeholder="Instruction" matInput
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.pickup"></textarea>
+              <mat-hint align="end">{{ reason.value.length }} / 120</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- Delviery info -->
+    <div class="block flex flex--column flex--box">
+      <div class="flex flex__justify-content--space-between">
+        <h3 class="block--h3">Delivery Information</h3>
+        <div *ngIf="permissionWrite() && !permissionEdit()">
+          <button *ngIf="readonly.delivery" (click)="modeEdit('delivery')" class="login__form--button" mat-icon-button
+            color="primary">
+            <i class="material-icons">
+              lock
+            </i>
+          </button>
+          <button *ngIf="!readonly.delivery" (click)="save()" class="login__form--button" mat-icon-button
+            color="primary">
+            <i class="material-icons">
+              lock_open
+            </i>
+          </button>
+        </div>
+      </div>
+
+      <form [formGroup]="deliveryLocation" class="flex flex--row block--body">
+        <div class="flex flex--column flex--box column--first">
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="address" matInput placeholder="Street"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.delivery" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="city" matInput placeholder="City"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.delivery" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="state" matInput placeholder="State"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.delivery" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="zipCode" matInput placeholder="Zip"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.delivery" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="addressType" matInput placeholder="Address Type"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.delivery" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="flex flex--column flex--box">
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="name" matInput placeholder="Contact Name"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.delivery" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="text" formControlName="phone" matInput placeholder="Contact Phone"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.delivery" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <input type="email" formControlName="email" matInput placeholder="Contact Email"
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.delivery" />
+            </mat-form-field>
+          </div>
+          <div class="flex flex--column">
+            <mat-form-field>
+              <textarea #reason formControlName="instructions" maxLength="120" placeholder="Instruction" matInput
+                [readonly]="!permissionWrite() || permissionEdit() || readonly.delivery"></textarea>
+              <mat-hint align="end">{{ reason.value.length }} / 120</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!--Delivery Info-->
+  </div>
+  <div class="flex flex--column flex--box">
+    <div class="block flex flex--column notes--block">
+      <h3>Internal notes</h3>
+      <div *ngIf="!notes.length">
+        No notes
+      </div>
+      <div class="flex flex--column notes--block-shadow" *ngIf="notes && notes.length">
+        <div class="flex flex--row notes" *ngFor="let note of notes">
+          <div class="flex flex--column">
+            <span *ngIf="!note.account.avatarUrl" class="avatar_note"></span>
+            <img *ngIf="note.account.avatarUrl" class="notes--avatar" [src]="note.account.avatarUrl"
+              alt="{{ note?.account?.firstName }}" />
+          </div>
+          <div class="flex flex--column flex--box notes--info">
+            <div class="flex flex--row flex--box flex__justify-content--space-between">
+              <div>
+                {{ note?.account?.firstName }} {{ note?.account?.lastName }}
+              </div>
+              <div textSize="12" textColor="brownish-grey">
+                {{ note?.createdDate }}
+              </div>
+            </div>
+            <div textSize="12" textColor="brownish-grey" class="flex flex--row">
+              {{ note?.note }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex--row flex__justify-content--end" *ngIf="isCompanyUser() && !permissionEdit()">
+        <button class="notes--button notes--add" mat-icon-button (click)="addNote()">
+          <i class="material-icons" textSize="22" textColor="white">add </i>
+        </button>
+      </div>
+    </div>
+    <div class="block flex flex--column flex--box">
+      <h3 class="block--h3">Order activity</h3>
+      <div *ngIf="!activities.length">
+        No activity
+      </div>
+      <div *ngIf="activities.length">
+        <h5 class="block--h3">Timeline</h5>
+        <div class="timeline flex flex--column">
+          <div *ngFor="let activity of activities">
+            <div class="timeline--circle">
+              <div class="timeline--item">
+                <div>{{ activity?.createdDate }}</div>
+                <div textSize="14" textColor="brownish-grey">
+                  {{ activity?.description }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex flex--row flex--box" *ngIf="order">
+  <div class="block flex--column flex--box">
+    <h3>Vehicles</h3>
+    <div class="flex flex--column flex--box">
+      <button *ngIf="!cars.length && permissionWriteCars() && !permissionEdit()" class=" cars--actions
+        cars--actions-blue" mat-icon-button (click)="addCar()">
+        <i class="material-icons" textSize="18" textColor="dodger-blue">
+          add_circle_outline
+        </i>
+        Add car
+      </button>
+      <div class="flex flex--row flex--box" *ngFor="let car of cars; let i = index">
+        <div class="flex flex--column flex--box">
+          <div class="flex flex--row">
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.vin" type="text" matInput maxlength="17" placeholder="VIN number"
+                  (ngModelChange)="changeByVin(i)" [readonly]="!permissionWriteCars() || permissionEdit()" />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.year" type="text" matInput placeholder="Year"
+                  [readonly]="!permissionWriteCars() || permissionEdit()" />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.make" type="text" matInput placeholder="Make"
+                  [readonly]="!permissionWriteCars() || permissionEdit()" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="flex flex--row">
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.model" type="text" matInput placeholder="Model"
+                  [readonly]="!permissionWriteCars() || permissionEdit()" />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--column flex--box cars--input">
+              <mat-form-field>
+                <input [(ngModel)]="car.type" type="text" matInput placeholder="Type"
+                  [readonly]="!permissionWriteCars() || permissionEdit()" />
+              </mat-form-field>
+            </div>
+            <div class="flex flex--row flex--box">
+              <div class="flex flex--row" *ngIf="permissionWriteCars() && !permissionEdit()">
+                <button class="cars--actions cars--actions-red" mat-icon-button (click)="removeCar(i)">
+                  <i class="material-icons" textSize="18" textColor="red">
+                    delete_forever
+                  </i>
+                  Remove car
+                </button>
+                <button *ngIf="i + 1 === cars.length" class="cars--actions cars--actions-blue" mat-icon-button
+                  (click)="addCar()">
+                  <i class="material-icons" textSize="18" textColor="dodger-blue">
+                    add_circle_outline
+                  </i>
+                  Add car
+                </button>
+                <button class="cars--actions cars--actions-blue" (click)="saveToAdmin()" [disabled]="isValid(car)"
+                  mat-icon-button>
+                  <i class="material-icons" textSize="18" textColor="dodger-blue">
+                    save
+                  </i>
+                  Save car
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex flex--row">
+  <!-- Shipper info -->
+  <div class="block flex flex--column flex--box1">
+    <div class="flex flex__justify-content--space-between">
+      <h3 class="block--h3">Shipper Information</h3>
+      <div *ngIf="canBeEdited() && !permissionEdit()">
+        <button *ngIf="readonly.shipper" (click)="modeEdit('shipper')" class="login__form--button" mat-icon-button
+          color="primary">
+          <i class="material-icons">
+            lock
+          </i>
+        </button>
+        <button *ngIf="!readonly.shipper" (click)="saveToAdmin()" class="login__form--button" mat-icon-button
+          color="primary">
+          <i class="material-icons">
+            lock_open
+          </i>
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="shipperInformation" class="flex flex--column block--body">
+      <div class="flex flex--row">
+        <div class="flex flex--column flex--box column--first">
+          <!-- Address -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="address" matInput placeholder="Address"
+                [readonly]="permissionEdit() || readonly.shipper" />
+            </mat-form-field>
+          </div>
+          <!-- Address -->
+
+          <!-- City -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="city" matInput placeholder="City"
+                [readonly]="permissionEdit() || readonly.shipper" />
+            </mat-form-field>
+          </div>
+          <!-- City -->
+
+          <!-- State -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="state" matInput placeholder="State"
+                [readonly]="permissionEdit() || readonly.shipper" />
+            </mat-form-field>
+          </div>
+          <!-- State -->
+
+          <!-- ZIP Code -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="zipCode" matInput placeholder="Zip code"
+                [readonly]="permissionEdit() || readonly.shipper" />
+            </mat-form-field>
+          </div>
+          <!-- ZIP Code -->
+        </div>
+
+        <div class="flex flex--column flex--box">
+          <!-- Company name -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="companyName" matInput placeholder="Company name"
+                [readonly]="permissionEdit() || readonly.shipper" />
+            </mat-form-field>
+          </div>
+          <!-- Company name -->
+
+          <!-- Contact name -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="fullName" matInput placeholder="Contact name"
+                [readonly]="permissionEdit() || readonly.shipper" />
+            </mat-form-field>
+          </div>
+          <!-- Contact name -->
+
+          <!-- Contact Phone -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="text" formControlName="phone" matInput placeholder="Contact phone"
+                [readonly]="permissionEdit() || readonly.shipper" />
+            </mat-form-field>
+          </div>
+          <!-- Contact Phone -->
+
+          <!-- Contact email -->
+          <div class="flex flex--column cars--input">
+            <mat-form-field>
+              <input type="email" formControlName="email" matInput placeholder="Contact email"
+                [readonly]="permissionEdit() || readonly.shipper" />
+            </mat-form-field>
+          </div>
+          <!-- Contact email -->
+        </div>
+      </div>
+
+      <div class="flex flex--row flex--box">
+        <mat-form-field class="flex flex--row flex--box cars--input">
+          <input type="email" formControlName="billingEmail" matInput placeholder="Billing email"
+            [readonly]="permissionEdit() || readonly.shipper" />
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+  <!-- Shipper info -->
+
+  <!-- Payment info -->
+  <div class="block flex flex--column flex--box">
+    <div class="flex flex__justify-content--space-between">
+      <h3 class="block--h3">Payment Information</h3>
+      <div *ngIf="canBeEdited() && !permissionPayment()">
+        <button *ngIf="readonly.payment" (click)="modeEdit('payment') && modeEdit('price')" class="login__form--button"
+          mat-icon-button color="primary">
+          <i class="material-icons">
+            lock
+          </i>
+        </button>
+        <button *ngIf="!readonly.payment" (click)="saveToAdmin()" class="login__form--button" mat-icon-button
+          color="primary">
+          <i class="material-icons">
+            lock_open
+          </i>
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="paymentInformation" class="flex flex--column block--body">
+      <div class="flex flex--row flex--box column--first">
+        <!-- Payment Method -->
+        <div class="flex flex--column flex--box">
+          <mat-form-field>
+            <input type="text" formControlName="paymentMethods" matInput placeholder="Payment Method"
+              [readonly]="permissionPaymentRead()" />
+          </mat-form-field>
+        </div>
+        <!-- Payment Method -->
+
+        <!-- Price -->
+        <div class="flex flex--column flex--box cars--input">
+          <mat-form-field>
+            <input type="text" formControlName="salePrice" matInput placeholder="Price"
+              [readonly]="permissionPaymentRead()" />
+          </mat-form-field>
+        </div>
+        <!-- Price -->
+      </div>
+
+      <div class="flex flex--row flex--box column--first">
+        <!-- Payment Method -->
+        <div class="flex flex--column flex--box">
+          <mat-form-field class="flex flex--row flex--box">
+            <input type="number" formControlName="brokerFee" matInput placeholder="Broker Fee"
+              [readonly]="permissionPaymentRead()" />
+          </mat-form-field>
+        </div>
+        <!-- Payment Method -->
+
+        <!-- Price -->
+        <div class="flex flex--column flex--box cars--input"
+          *ngIf="order && order.clientPaymentStatus && isSuperAdmin()">
+          <mat-form-field>
+            <input type="text" formControlName="clientPaymentStatus" matInput readonly placeholder="Status" />
+          </mat-form-field>
+        </div>
+        <!-- Price -->
+      </div>
+
+      <div class="flex flex--row flex--box column--first">
+        <mat-form-field class="flex flex--row flex--box">
+          <textarea #reason formControlName="paymentNote" maxLength="150" placeholder="Notices" matInput rows="3"
+            [readonly]="permissionPaymentRead()"></textarea>
+          <mat-hint align="end">{{ reason.value.length }} / 150</mat-hint>
+        </mat-form-field>
+      </div>
+    </form>
+    <div *ngIf="order && order?.paymentDelivery" class="info-payment">Carrier is Responsible to collect payment from
+      customer at delivery</div>
+  </div>
+  <!-- Payment info -->
+</div>
+
+<div class="flex flex--row flex--box" *ngIf="imageObject.length && visiblePhotos()">
+  <div class="flex--column flex--box block">
+    <h3 class="block--h3">Pickup Images</h3>
+    <div>
+      <ng-image-slider [images]="imageObject" #nav>
+      </ng-image-slider>
+    </div>
+  </div>
+</div>
+
+<div class="flex flex--row flex--box" *ngIf="imageObjectDelivery.length && visiblePhotos()">
+  <div class="flex--column flex--box block">
+    <h3 class="block--h3">Delivery Images</h3>
+    <div>
+      <ng-image-slider [images]="imageObjectDelivery" #nav>
+      </ng-image-slider>
+    </div>
+  </div>
+</div>
+
+<div class="flex flex--row flex--box">
+  <div class="flex--column flex--box">
+    <div class="block">
+      <div class="flex flex__justify-content--space-between flex__align-items--center">
+        <h3 class="block--h3">Attachments</h3>
+      </div>
+      <div class="flex flex--row">
+        <div class="document" *ngFor="let document of documents">
+          <div class="document--actions">
+            <button class="document--button document--button-view" mat-icon-button (click)="viewDocument(document)">
+              <i class="material-icons" textSize="18" textColor="white">open_in_new</i>
+            </button>
+            <button *ngIf="permissionWriteCars() && !permissionEdit() && document.createdById === currentUser.roleId"
+              class="document--button document--button-red" mat-icon-button (click)="checkRemove(document)">
+              <i class="material-icons" textSize="18" textColor="white">delete_forever</i>
+            </button>
+          </div>
+          <div class="flex flex--column flex__align-items--center">
+            <img src="assets/image/document.png" />
+            <label>{{ document.displayName }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex--row flex__justify-content--end" *ngIf="permissionWriteCars() && !permissionEdit()">
+        <input accept="application/pdf" #document (change)="uploadDocument($event.target.files[0])" id="document"
+          type="file" placeholder="Add Document" hidden />
+        <label class="notes--button" for="document">
+          <i class="material-icons" textSize="22" textColor="white">add </i>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

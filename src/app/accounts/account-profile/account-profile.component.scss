@@ -1,0 +1,153 @@
+.personal {
+  width: 100%;
+}
+
+.column_first {
+  width: 30%;
+  margin: 5px;
+}
+
+.avatarUrl {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  background-color: #cccccc;
+}
+
+.column_second {
+  width: 70%;
+  margin: 5px;
+}
+
+.mt-5 {
+  margin-top: 5px;
+}
+
+.mr-5 {
+  margin-right: 5px;
+}
+
+.column-margin {
+  margin-top: 5px;
+
+  &-title {
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+
+  &-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-file {
+    label {
+      height: 30px;
+      font-size: 12px;
+      color: #fff;
+      background-color: #438afe;
+      padding: 0 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
+}
+
+.column-item {
+  padding: 0 20px;
+}
+
+.delete {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.upload {
+  height: 200px;
+
+  mat-icon {
+    height: 35px;
+    width: 35px;
+  }
+
+  p {
+    margin-bottom: 5px;
+  }
+
+  span {
+    text-align: center;
+  }
+}
+
+mat-radio-button {
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.color--status {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 14px;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.attachments {
+  padding: 7px 0;
+
+  &--name {
+    margin-left: 10px;
+  }
+
+  &--image {
+    background-color: #cccccc;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 50%;
+  }
+}
+
+.dispatcher {
+  color: #777777;
+}
+
+.user--avatar {
+  min-height: 150px;
+}
+
+.navigation {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  cursor: pointer;
+
+  &--page {
+    padding: 0 10px;
+    margin-top: -5px;
+  }
+}
+
+.signature{
+  height: 250px;
+  object-fit: contain;
+}
+
+@media only screen and (max-width: 1400px) {
+
+  .column_first,
+  .column_second {
+    width: 50%;
+  }
+}
